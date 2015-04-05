@@ -1,0 +1,1 @@
+alias groovy='groovyclient'
