@@ -1,0 +1,66 @@
+#!/usr/bin/env tclsh
+
+proc batch_rename { dir ext prefix { mode "-add" } { old_pattern "" } { new_pattern "" } } {
+
+    if { [string index $dir 0] == "." } { 
+
+        # Relative dir path
+        set dir "[pwd][string trim $dir .]"
+    }
+
+    set prefix_end [expr [string length $prefix] - 1]
+
+    puts "Renaming all files matching *$ext in\n$dir\nwith prefix $prefix"
+
+    set files [glob -nocomplain -directory $dir *$ext]
+    
+    foreach item $files {
+
+        # Ignore directories
+        if { [file isdirectory $item] } continue
+
+        # Get the filename
+        set old_name [file tail $item]
+
+        # Ignore files that already have prefix
+        if { $mode == "-replace" } {
+
+            set new_name [string map "$old_pattern $new_pattern" $old_name]
+
+        } elseif { $mode == "-add" } {
+
+            if { [string range $old_name 0 $prefix_end] == $prefix } {
+                puts "Skipping $old_name"
+                continue
+            } else {
+                set new_name "$prefix$old_name"
+            }
+
+        } elseif { $mode == "-rem" } {
+
+            if { [string range $old_name 0 $prefix_end] == $prefix } {
+                set new_name [string range $old_name [expr $prefix_end + 1] end]
+            } else {
+                puts "Skipping $old_name"
+                continue
+            }
+        }
+
+        puts "$old_name   ->   $new_name"
+
+        # Make the full path to the newly named file
+        set dir_name [file dirname $item] 
+        set new_path [file join $dir_name $new_name]
+            
+        # Finally, rename the file
+        file rename -force $item $new_path 
+    }
+}
+
+if { [string match $argv "-h"] || [string match $argv "-help"] } {
+    puts "Usage:"
+    puts "batch_rename <dir> <ext> <prefix> { mode <-add|-replace|-rem> } { old_pattern \"\" } { new_pattern \"\" }"
+} else {
+    puts "batch_rename $argv"
+    batch_rename {*}$argv
+}
