@@ -1,4 +1,145 @@
-syntax on
+execute pathogen#infect()
 
-" Wrap gitcommit file types at the appropriate length
-filetype indent plugin on
+syntax on
+filetype plugin indent on
+
+set diffexpr=MyDiff()
+function MyDiff()
+  let opt = '-a --binary '
+  if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
+  if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
+  let arg1 = v:fname_in
+  if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
+  let arg2 = v:fname_new
+  if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
+  let arg3 = v:fname_out
+  if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
+  let eq = ''
+  if $VIMRUNTIME =~ ' '
+    if &sh =~ '\<cmd'
+      let cmd = '""' . $VIMRUNTIME . '\diff"'
+      let eq = '"'
+    else
+      let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
+    endif
+  else
+    let cmd = $VIMRUNTIME . '\diff'
+  endif
+  silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3 . eq
+endfunction
+
+"Set the colors
+set guifont=Lucida\ Console
+highlight Normal guibg=Black guifg=LightGreen
+highlight Constant guifg=White
+highlight Statement gui=NONE guifg=Yellow
+highlight Identifier guifg=Orange
+highlight PreProc guifg=Orange
+highlight Type gui=NONE guifg=Orange
+highlight Special guifg=Orange
+highlight Comment guifg=#7d98ff
+highlight Blue guibg=blue guifg=white
+
+:set tabstop=4
+:set shiftwidth=4
+:set expandtab
+:set softtabstop=4
+:set nowrap
+:set backspace=indent,eol,start
+
+"F2 now toggles the show line numbers
+map <F2> :set invnumber<cr>a
+map! <F2> <Esc>:set invnumber<cr>
+
+"Vim only defaults to 3 matches so this is the syntax for the first 2
+"highlight any extra white space green
+"match ExtraWhitespace /\s\+$\| \+\ze\t/   This will highlight only white
+"space at the end of a tab
+"Highlight any characters above 120 places red
+highlight ExtraWhitespace ctermbg=darkgreen guibg=darkgreen
+let s:longlines = 1
+function! Match_long_lines()
+  if s:longlines == 1
+    let s:longlines = 0
+    :match ExtraWhitespace /\s\+$\|\t/
+    :2match ErrorMsg '\%>120v.\+'
+  else
+    let s:longlines = 1
+    :match
+    :2match
+  endif
+endfunction
+nnoremap <F3> :call Match_long_lines()<CR>
+inoremap <F3> <Esc>:call Match_long_lines()<CR>a
+
+"F4 now toggles highlights with searching
+noremap <F4> :set hls!<CR>
+
+"F5 now toggles binary mode
+map <F5> :%!xxd<cr>a
+map <S-F5> <Esc>:%!xxd -r<cr>
+
+"F6 will delete extra spaces at the end of a line and will
+"change tabs to spaces
+map <F6> :retab<cr>:%s/\s\+$//<cr>
+map! <F6> <Esc>:retab<cr>:%s/\s\+$//<cr>a
+
+"The first time you press home got to the begining of the text
+"The second time go to the begining of the line
+function! SmartHome()
+  let s:col = col(".")
+  normal! ^
+  if s:col == col(".")
+    normal! 0
+  endif
+endfunction
+nnoremap <silent> <Home> :call SmartHome()<CR>
+inoremap <silent> <Home> <C-O>:call SmartHome()<CR>
+
+"F7 will clean mixed line endings and set all to DOS-style EOLs
+map <F7> :%s/\r//g<cr>:set ff=dos<cr>
+map! <F7> <Esc>:%s/\r//g<cr>:set ff=dos<cr>
+
+"Don't lose selection after indent
+vnoremap < <gv
+vnoremap > >gv
+
+"set the tags file
+set tags=tags;
+
+" map control-backspace to delete the previous word
+" imap <C-BS> <C-W>
+inoremap <C-BS> <C-W>
+
+" map double clicking a word to highlight that word
+nnoremap <silent> <2-LeftMouse> :let @/='\V\<'.escape(expand('<cword>'), '\').'\>'<cr>:set hls<cr>
+
+function! MarkWindowSwap()
+    " marked window number
+    let g:markedWinNum = winnr()
+    let g:markedBufNum = bufnr("%")
+endfunction
+
+function! DoWindowSwap()
+    let curWinNum = winnr()
+    let curBufNum = bufnr("%")
+    " Switch focus to marked window
+    exe g:markedWinNum . "wincmd w"
+
+    " Load current buffer on marked window
+    exe 'hide buf' curBufNum
+
+    " Switch focus to current window
+    exe curWinNum . "wincmd w"
+
+    " Load marked buffer on current window
+    exe 'hide buf' g:markedBufNum
+endfunction
+
+nnoremap <C-h> :call MarkWindowSwap()<CR> <C-w>h :call DoWindowSwap()<CR>
+nnoremap <C-j> :call MarkWindowSwap()<CR> <C-w>j :call DoWindowSwap()<CR>
+nnoremap <C-k> :call MarkWindowSwap()<CR> <C-w>k :call DoWindowSwap()<CR>
+nnoremap <C-l> :call MarkWindowSwap()<CR> <C-w>l :call DoWindowSwap()<CR>
+
+" Experimental scripts
+"autocmd BufWritePost * execute '!deploy.sh'
