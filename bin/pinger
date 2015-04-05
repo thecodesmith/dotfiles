@@ -1,0 +1,37 @@
+#!/usr/bin/env tclsh
+
+# These procs taken from the Tcl wiki
+
+if {$argc == 0} {
+    set site http://purl.org/thecliff/tcl/wiki/
+} else {
+    set site [lindex $argv 0]
+}
+
+package require http 2.3
+
+# this proc contributed by [Donal Fellows]
+proc geturl_followRedirects {url args} {
+    while 1 {
+        set token [eval [list http::geturl $url] $args]
+        switch -glob [http::ncode $token] {
+            30[1237] {### redirect - see below ###}
+            default  {return $token}
+        }
+        upvar #0 $token state
+        array set meta [set ${token}(meta)]
+        if {![info exists meta(Location)]} {
+           return $token
+        }
+        set url $meta(Location)
+        unset meta
+    }
+}
+
+set token [geturl_followRedirects $site -validate 1]
+if {[regexp -nocase ok [::http::code $token]]} {
+    puts "$site is alive"
+} else {
+    puts "$site is dead: [::http::code $token]"
+}
+::http::cleanup $token
