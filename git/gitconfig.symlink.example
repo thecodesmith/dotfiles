@@ -9,7 +9,10 @@
 [credential]
         helper = GIT_CREDENTIAL_HELPER
 [alias]
+        st = status
         co = checkout
+        ci = commit
+        br = branch
         promote = !$ZSH/bin/git-promote
         wtf     = !$ZSH/bin/git-wtf
         rank-contributors = !$ZSH/bin/git-rank-contributors
