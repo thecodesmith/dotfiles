@@ -1,7 +1,31 @@
-execute pathogen#infect()
+set nocompatible
+filetype off
 
-syntax on
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+Plugin 'gmarik/Vundle.vim'
+Plugin 'flazz/vim-colorschemes'
+
+call vundle#end()
+
 filetype plugin indent on
+syntax on
+
+set guifont=Lucida\ Console
+"colorscheme wombat256
+colorscheme darcula
+
+:set tabstop=4
+:set shiftwidth=4
+:set expandtab
+:set softtabstop=4
+:set nowrap
+:set backspace=indent,eol,start
+
+"F2 now toggles the show line numbers
+map <F2> :set invnumber<cr>a
+map! <F2> <Esc>:set invnumber<cr>
 
 set diffexpr=MyDiff()
 function MyDiff()
@@ -27,29 +51,6 @@ function MyDiff()
   endif
   silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3 . eq
 endfunction
-
-"Set the colors
-set guifont=Lucida\ Console
-highlight Normal guibg=Black guifg=LightGreen
-highlight Constant guifg=White
-highlight Statement gui=NONE guifg=Yellow
-highlight Identifier guifg=Orange
-highlight PreProc guifg=Orange
-highlight Type gui=NONE guifg=Orange
-highlight Special guifg=Orange
-highlight Comment guifg=#7d98ff
-highlight Blue guibg=blue guifg=white
-
-:set tabstop=4
-:set shiftwidth=4
-:set expandtab
-:set softtabstop=4
-:set nowrap
-:set backspace=indent,eol,start
-
-"F2 now toggles the show line numbers
-map <F2> :set invnumber<cr>a
-map! <F2> <Esc>:set invnumber<cr>
 
 "Vim only defaults to 3 matches so this is the syntax for the first 2
 "highlight any extra white space green
