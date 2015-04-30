@@ -13,6 +13,6 @@ then
 fi
 
 # Install homebrew packages
-brew install grc coreutils spark vim
+brew install grc coreutils spark git vim hub
 
 exit 0

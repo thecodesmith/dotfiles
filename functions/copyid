@@ -1,0 +1,11 @@
+copyid() {
+    # as user '$1' at IP '$2', copy over our local ssh key
+    # so we don't have to do type a password everytime we
+    # ssh to this machine
+    
+    if hash ssh-copy-id 2>/dev/null; then
+        ssh-copy-id -i ~/.ssh/id_rsa.pub $1@$2
+    else
+        cat ~/.ssh/id_rsa.pub | ssh $1@$2 "mkdir ~/.ssh; cat >> ~/.ssh/authorized_keys"
+    fi
+}
