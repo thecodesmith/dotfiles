@@ -1,7 +1,43 @@
 set term=screen-256color
 set nocompatible
-syntax on
+filetype off
+
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+Plugin 'gmarik/Vundle.vim'
+Plugin 'flazz/vim-colorschemes'
+Plugin 'godlygeek/tabular'
+
+call vundle#end()
+
 filetype plugin indent on
+syntax on
+
+set guifont=Lucida\ Console
+colorscheme darcula
+
+set tabstop=4
+set shiftwidth=4
+set expandtab
+set softtabstop=4
+set nowrap
+set backspace=indent,eol,start
+
+set ruler
+set showcmd
+set hlsearch
+
+"F2 now toggles the show line numbers
+map <F2> :set invnumber<cr>a
+map! <F2> <Esc>:set invnumber<cr>
+
+set clipboard=unnamed
+set pastetoggle=<F8>
+
+if exists(":Tabularize")
+  vnoremap <leader>a :Tabularize<space>/
+endif
 
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()

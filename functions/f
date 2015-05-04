@@ -1,0 +1,5 @@
+f() {
+    # quick find. Takes one parameter - the search term
+    #echo "find . -iname \"*$1*\""
+    find . -iname "*$1*"
+}
