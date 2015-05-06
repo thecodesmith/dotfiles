@@ -1,20 +1,51 @@
-set term=screen-256color
-set nocompatible
-filetype off
+" .vimrc
 
+" vimrc is not vi-compatible
+set nocompatible
+
+" Setting up Vundle - the vim plugin bundler
+
+""" Vundle plugin manager {{{
+let vundle_first_run=0
+let vundle_readme=expand('~/.vim/bundle/Vundle.vim/README.md')
+if !filereadable(vundle_readme)
+    echo "Installing Vundle..."
+    echo ""
+    silent !mkdir -p ~/.vim/bundle
+    silent !git clone https://github.com/gmarik/Vundle.vim ~/.vim/bundle/Vundle.vim
+    let vundle_first_run=1
+endif
+""" }}}
+
+""" Initialize Vundle {{{
+filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
+""" }}}
 
+""" Put Vundle plugins here {{{
 Plugin 'gmarik/Vundle.vim'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'godlygeek/tabular'
 Plugin 'kchmck/vim-coffee-script'
+""" }}} End Vundle plugins
 
+""" Finalize Vundle
 call vundle#end()
+
+""" Installing plugins the first time, quits when done {{{
+if vundle_first_run == 1
+    :silent! PluginInstall
+    :qa
+endif
+""" }}}
+
+" Finished setting up Vundle
 
 syntax enable
 filetype plugin indent on
 
+set term=screen-256color
 set guifont=Lucida\ Console
 colorscheme darcula
 
@@ -39,27 +70,6 @@ set pastetoggle=<F8>
 if exists(":Tabularize")
   vnoremap <leader>a :Tabularize<space>/
 endif
-
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-
-Plugin 'gmarik/Vundle.vim'
-Plugin 'flazz/vim-colorschemes'
-
-"Set the colors
-set guifont=Lucida\ Console
-colorscheme darcula
-
-set tabstop=4
-set shiftwidth=4
-set expandtab
-set softtabstop=4
-set nowrap
-set backspace=indent,eol,start
-
-"F2 now toggles the show line numbers
-map <F2> :set invnumber<cr>a
-map! <F2> <Esc>:set invnumber<cr>
 
 set diffexpr=MyDiff()
 function MyDiff()
