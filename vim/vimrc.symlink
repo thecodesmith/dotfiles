@@ -8,11 +8,12 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'godlygeek/tabular'
+Plugin 'kchmck/vim-coffee-script'
 
 call vundle#end()
 
+syntax enable
 filetype plugin indent on
-syntax on
 
 set guifont=Lucida\ Console
 colorscheme darcula
