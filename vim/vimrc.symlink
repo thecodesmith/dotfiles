@@ -28,6 +28,7 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'godlygeek/tabular'
 Plugin 'kchmck/vim-coffee-script'
+Plugin 'terryma/vim-multiple-cursors'
 """ }}} End Vundle plugins
 
 """ Finalize Vundle
@@ -60,6 +61,11 @@ set ruler
 set showcmd
 set hlsearch
 
+" Configure vim-multiple-cursors
+let g:multi_cursor_use_default_mapping=0
+let g:multi_cursor_next_key='<C-n>'
+let g:multi_cursor_quit_key='<Esc>'
+
 "F2 now toggles the show line numbers
 map <F2> :set invnumber<cr>a
 map! <F2> <Esc>:set invnumber<cr>
@@ -72,7 +78,7 @@ if exists(":Tabularize")
 endif
 
 set diffexpr=MyDiff()
-function MyDiff()
+function! MyDiff()
   let opt = '-a --binary '
   if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
   if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
