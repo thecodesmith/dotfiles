@@ -1,0 +1,43 @@
+# Change default prefix to Ctrl-a
+set -g prefix C-a
+unbind C-b
+
+# Change default delay to be more responsive
+set -s escape-time 1
+
+# Start window and pane numbering at 1
+set -g base-index 1
+setw -g pane-base-index 1
+
+# Reload .tmux.conf using Prefix-r
+bind r source-file ~/.tmux.conf \; display "Reloaded!"
+
+# Press Ctrl-a twice to send to application inside tmux
+bind C-a send-prefix
+
+# Splitting panes
+bind | split-window -h
+bind - split-window -v
+
+# Movement keys
+bind h select-pane -L
+bind j select-pane -D
+bind k select-pane -U
+bind l select-pane -R
+bind -r C-h select-window -t :-
+bind -r C-l select-window -t :+
+
+# Resizing panes
+bind -r H resize-pane -L 5
+bind -r J resize-pane -D 5
+bind -r K resize-pane -U 5
+bind -r L resize-pane -R 5
+
+# Handling the mouse
+setw -g mode-mouse off
+set -g mouse-select-pane off
+set -g mouse-resize-pane off
+set -g mouse-select-window off
+
+# Use 256 colors in tmux
+set -g default-terminal "screen-256color"
