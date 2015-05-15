@@ -26,6 +26,7 @@ call vundle#begin()
 """ Put Vundle plugins here {{{
 Plugin 'gmarik/Vundle.vim'
 Plugin 'flazz/vim-colorschemes'
+Plugin 'alem0lars/vim-colorscheme-darcula'
 Plugin 'godlygeek/tabular'
 Plugin 'kchmck/vim-coffee-script'
 """ }}} End Vundle plugins
