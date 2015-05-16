@@ -9,11 +9,11 @@ set nocompatible
 let vundle_first_run=0
 let vundle_readme=expand('~/.vim/bundle/Vundle.vim/README.md')
 if !filereadable(vundle_readme)
-    echo "Installing Vundle..."
-    echo ""
-    silent !mkdir -p ~/.vim/bundle
-    silent !git clone https://github.com/gmarik/Vundle.vim ~/.vim/bundle/Vundle.vim
-    let vundle_first_run=1
+  echo "Installing Vundle..."
+  echo ""
+  silent !mkdir -p ~/.vim/bundle
+  silent !git clone https://github.com/gmarik/Vundle.vim ~/.vim/bundle/Vundle.vim
+  let vundle_first_run=1
 endif
 """ }}}
 
@@ -35,10 +35,10 @@ Plugin 'terryma/vim-multiple-cursors'
 """ Finalize Vundle
 call vundle#end()
 
-""" Installing plugins the first time, quits when done {{{
+""" Installing plugins on first run, quits when done {{{
 if vundle_first_run == 1
-    :silent! PluginInstall
-    :qa
+  :silent! PluginInstall
+  :qa
 endif
 """ }}}
 
@@ -70,47 +70,19 @@ let g:multi_cursor_use_default_mapping=0
 let g:multi_cursor_next_key='<C-n>'
 let g:multi_cursor_quit_key='<Esc>'
 
-"F2 now toggles the show line numbers
-map <F2> :set invnumber<cr>a
-map! <F2> <Esc>:set invnumber<cr>
-
-"set clipboard=unnamed
-set pastetoggle=<F8>
+" Set the tags file
+set tags=tags;
 
 if exists(":Tabularize")
   vnoremap <leader>a :Tabularize<space>/
 endif
-
-set diffexpr=MyDiff()
-function! MyDiff()
-  let opt = '-a --binary '
-  if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
-  if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
-  let arg1 = v:fname_in
-  if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
-  let arg2 = v:fname_new
-  if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
-  let arg3 = v:fname_out
-  if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
-  let eq = ''
-  if $VIMRUNTIME =~ ' '
-    if &sh =~ '\<cmd'
-      let cmd = '""' . $VIMRUNTIME . '\diff"'
-      let eq = '"'
-    else
-      let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
-    endif
-  else
-    let cmd = $VIMRUNTIME . '\diff'
-  endif
-  silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3 . eq
-endfunction
 
 "Vim only defaults to 3 matches so this is the syntax for the first 2
 "highlight any extra white space green
 "match ExtraWhitespace /\s\+$\| \+\ze\t/   This will highlight only white
 "space at the end of a tab
 "Highlight any characters above 120 places red
+
 highlight ExtraWhitespace ctermbg=darkgreen guibg=darkgreen
 let s:longlines = 1
 function! Match_long_lines()
@@ -127,68 +99,49 @@ endfunction
 nnoremap <F3> :call Match_long_lines()<CR>
 inoremap <F3> <Esc>:call Match_long_lines()<CR>a
 
-"F4 now toggles highlights with searching
-noremap <F4> :set hls!<CR>
+" F2 now toggles the show line numbers
+map <F2> :set invnumber<cr>a
+map! <F2> <Esc>:set invnumber<cr>
 
-"F5 now toggles binary mode
+" F5 now toggles binary mode
 map <F5> :%!xxd<cr>a
 map <S-F5> <Esc>:%!xxd -r<cr>
 
-"F6 will delete extra spaces at the end of a line and will
+" F6 will delete extra spaces at the end of a line and will
 "change tabs to spaces
 map <F6> :retab<cr>:%s/\s\+$//<cr>
 map! <F6> <Esc>:retab<cr>:%s/\s\+$//<cr>a
 
-"The first time you press home got to the begining of the text
-"The second time go to the begining of the line
-function! SmartHome()
-  let s:col = col(".")
-  normal! ^
-  if s:col == col(".")
-    normal! 0
-  endif
-endfunction
-nnoremap <silent> <Home> :call SmartHome()<CR>
-inoremap <silent> <Home> <C-O>:call SmartHome()<CR>
+" This was not working on linux
+"set clipboard=unnamed
+set pastetoggle=<F8>
 
-"F7 will clean mixed line endings and set all to DOS-style EOLs
-map <F7> :%s/\r//g<cr>:set ff=dos<cr>
-map! <F7> <Esc>:%s/\r//g<cr>:set ff=dos<cr>
-
-"Don't lose selection after indent
+" Don't lose selection after indent
 vnoremap < <gv
 vnoremap > >gv
 
-"set the tags file
-set tags=tags;
-
-" map control-backspace to delete the previous word
-" imap <C-BS> <C-W>
-inoremap <C-BS> <C-W>
-
-" map double clicking a word to highlight that word
-nnoremap <silent> <2-LeftMouse> :let @/='\V\<'.escape(expand('<cword>'), '\').'\>'<cr>:set hls<cr>
+""" Window swapping functions {{{
 
 function! MarkWindowSwap()
-    " marked window number
-    let g:markedWinNum = winnr()
-    let g:markedBufNum = bufnr("%")
+  " marked window number
+  let g:markedWinNum = winnr()
+  let g:markedBufNum = bufnr("%")
 endfunction
 
 function! DoWindowSwap()
-    let curWinNum = winnr()
-    let curBufNum = bufnr("%")
-    " Switch focus to marked window
-    exe g:markedWinNum . "wincmd w"
+  let curWinNum = winnr()
+  let curBufNum = bufnr("%")
+  " Switch focus to marked window
+  exe g:markedWinNum . "wincmd w"
 
-    " Load current buffer on marked window
-    exe 'hide buf' curBufNum
+  " Load current buffer on marked window
+  exe 'hide buf' curBufNum
 
-    " Switch focus to current window
-    exe curWinNum . "wincmd w"
+  " Switch focus to current window
+  exe curWinNum . "wincmd w"
 
-    " Load marked buffer on current window
-    exe 'hide buf' g:markedBufNum
+  " Load marked buffer on current window
+  exe 'hide buf' g:markedBufNum
 endfunction
 
 nnoremap <C-h> :call MarkWindowSwap()<CR> <C-w>h :call DoWindowSwap()<CR>
@@ -196,5 +149,12 @@ nnoremap <C-j> :call MarkWindowSwap()<CR> <C-w>j :call DoWindowSwap()<CR>
 nnoremap <C-k> :call MarkWindowSwap()<CR> <C-w>k :call DoWindowSwap()<CR>
 nnoremap <C-l> :call MarkWindowSwap()<CR> <C-w>l :call DoWindowSwap()<CR>
 
+""" End window swapping functions }}}
+
 " Experimental scripts
 "autocmd BufWritePost * execute '!deploy.sh'
+
+" TODO List
+" tpope/surround.vim
+" cheat sheet: always be learning 5-7 new things
+" setlocal colorcolumn=80
