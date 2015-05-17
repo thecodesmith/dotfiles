@@ -155,6 +155,7 @@ nnoremap <C-l> :call MarkWindowSwap()<CR> <C-w>l :call DoWindowSwap()<CR>
 "autocmd BufWritePost * execute '!deploy.sh'
 
 " TODO List
+" tpope/fugitive.vim -- Git plugin
 " tpope/surround.vim
 " cheat sheet: always be learning 5-7 new things
 " setlocal colorcolumn=80
