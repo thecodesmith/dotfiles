@@ -27,6 +27,7 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'alem0lars/vim-colorscheme-darcula'
+Plugin 'tpope/vim-commentary'
 Plugin 'godlygeek/tabular'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'terryma/vim-multiple-cursors'
@@ -58,6 +59,7 @@ set softtabstop=4
 set nowrap
 set backspace=indent,eol,start
 
+set number
 set ruler
 set showcmd
 set hlsearch
