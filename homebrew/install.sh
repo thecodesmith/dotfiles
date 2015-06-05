@@ -1,11 +1,12 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Homebrew
 #
-# This installs some of the common dependencies needed (or at least desired)
-# using Homebrew.
+# This installs some of the common dependencies needed
+# (or at least desired) using Homebrew.
 if [[ `os` != 'osx' ]]; then
-    exit 0
+  echo "  Skipping Homebrew install (OS X only)."
+  exit 0
 fi
 
 # Check for Homebrew
