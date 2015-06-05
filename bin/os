@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+os='unknown'
+
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+    os='linux'
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    os='osx'
+elif [[ "$OSTYPE" == "msys" ]]; then
+    os='windows'
+elif [[ "$OSTYPE" == "cygwin" ]]; then
+    os='windows'
+fi
+
+echo $os
