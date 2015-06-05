@@ -4,6 +4,9 @@
 #
 # This installs some of the common dependencies needed (or at least desired)
 # using Homebrew.
+if [[ `os` != 'osx' ]]; then
+    exit 0
+fi
 
 # Check for Homebrew
 if test ! $(which brew)
