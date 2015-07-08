@@ -28,6 +28,7 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'alem0lars/vim-colorscheme-darcula'
 Plugin 'tpope/vim-commentary'
+Plugin 'tpope/vim-abolish'
 Plugin 'godlygeek/tabular'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'terryma/vim-multiple-cursors'
@@ -60,6 +61,7 @@ set nowrap
 set backspace=indent,eol,start
 
 set number
+set colorcolumn=80
 set ruler
 set showcmd
 set hlsearch
@@ -111,8 +113,8 @@ map <S-F5> <Esc>:%!xxd -r<cr>
 
 " F6 will delete extra spaces at the end of a line and will
 "change tabs to spaces
-map <F6> :retab<cr>:%s/\s\+$//<cr>
-map! <F6> <Esc>:retab<cr>:%s/\s\+$//<cr>a
+map <F6> :retab<cr>:%s/\s\+$//<cr>:noh<cr>
+map! <F6> <Esc>:retab<cr>:%s/\s\+$//<cr>:noh<cr>a
 
 " This was not working on linux
 "set clipboard=unnamed
