@@ -67,11 +67,20 @@ rb_prompt() {
   fi
 }
 
+py_prompt() {
+  export VIRTUAL_ENV_DISABLE_PROMPT=1
+  if [[ -n "$VIRTUAL_ENV" ]]
+  then
+    venv=$(basename "$VIRTUAL_ENV")
+    echo "%{$fg_bold[yellow]%}$venv%{$reset_color%} "
+  fi
+}
+
 directory_name() {
   echo "%{$fg_bold[cyan]%}%1/%\/%{$reset_color%}"
 }
 
-export PROMPT=$'\n$(rb_prompt)in $(directory_name) $(git_dirty)$(need_push)\n› '
+export PROMPT=$'\n$(py_prompt)in $(directory_name) $(git_dirty)$(need_push)\n› '
 set_prompt () {
   export RPROMPT="%{$fg_bold[cyan]%}%{$reset_color%}"
 }
