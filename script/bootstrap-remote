@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# This script archives the .dotfiles directory and configures it
+# on a remote host through ssh
+
+cd `dirname "$0"`
+
+if [ ! -f "${HOME}/.dotfiles.tar.gz" ]
+then
+  echo 'No .dotfiles.tar.gz archive found in $HOME directory, creating now'
+  ./archive
+fi
+
+echo ''
+echo '  Copying dotfiles to remote machine and extracting'
+cat "${HOME}/.dotfiles.tar.gz" | ssh -o PermitLocalCommand=no "$1" 'mkdir -p ${HOME}/.dotfiles ; tar xz -C${HOME}/.dotfiles ; ${HOME}/.dotfiles/script/bootstrap -r ; chsh -s /bin/zsh'
