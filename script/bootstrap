@@ -84,6 +84,11 @@ link_file () {
 
         skip=true;
 
+      elif [ -n $REMOTE ]
+      then
+
+        backup=true;
+
       else
 
         user "File already exists: $dst ($(basename "$src")), what do you want to do?\n\
