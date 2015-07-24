@@ -3,12 +3,7 @@
 # on a remote host through ssh
 
 cd `dirname "$0"`
-
-if [ ! -f "${HOME}/.dotfiles.tar.gz" ]
-then
-  echo 'No .dotfiles.tar.gz archive found in $HOME directory, creating now'
-  ./archive
-fi
+./archive
 
 echo ''
 echo '  Copying dotfiles to remote machine and extracting'
