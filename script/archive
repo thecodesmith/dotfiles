@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#
+# Creates a compressed archive of the dotfiles directory and
+# puts it in the user's home directory
+cd `dirname "$0"`/..
+git archive HEAD --format tar.gz -o ~/.dotfiles.tar.gz
