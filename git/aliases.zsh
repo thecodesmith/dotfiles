@@ -1,6 +1,10 @@
 # Use `hub` as our git wrapper:
 #   https://hub.github.com/
-hub_path=$(which hub)
+if hash hub 2>/dev/null
+then
+  hub_path=$(which hub)
+fi
+
 if (( $+commands[hub] ))
 then
   alias git=$hub_path
