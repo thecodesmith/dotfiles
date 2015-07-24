@@ -1,6 +1,21 @@
 #!/usr/bin/env bash
 #
-# bootstrap installs things.
+# Configures .gitconfig, symlinks dotfiles to $HOME directory
+# To set up on a remote client through ssh, use "./bootstrap -r"
+
+REMOTE=false
+
+while test $# -gt 0
+do
+  case "$1" in
+    -r) printf "\n  Bootstrapping remote client: linking dotfiles only\n"
+        REMOTE=true
+      ;;
+    *)
+      ;;
+  esac
+  shift
+done
 
 cd "$(dirname "$0")/.."
 DOTFILES_ROOT=$(pwd)
@@ -141,9 +156,13 @@ archive_dotfiles () {
   sh "${DOTFILES_ROOT}/script/archive"
 }
 
-setup_gitconfig
+if ! $REMOTE
+then
+  setup_gitconfig
+  archive_dotfiles
+fi
+
 install_dotfiles
-archive_dotfiles
 
 # If we're on a Mac, let's install and setup homebrew.
 if [ "$(uname -s)" == "Darwin" ]
