@@ -74,8 +74,10 @@ link_file () {
   if [ -f "$dst" -o -d "$dst" -o -L "$dst" ]
   then
 
-    if [ -n $REMOTE ]
+    info "REMOTE: $REMOTE"
+    if [ -n "$REMOTE" ]
     then
+      info "Changed backup_all to true"
       backup_all="true"
     fi
 
