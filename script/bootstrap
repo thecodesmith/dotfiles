@@ -74,6 +74,11 @@ link_file () {
   if [ -f "$dst" -o -d "$dst" -o -L "$dst" ]
   then
 
+    if [ -n $REMOTE ]
+    then
+      backup_all=true
+    fi
+
     if [ "$overwrite_all" == "false" ] && [ "$backup_all" == "false" ] && [ "$skip_all" == "false" ]
     then
 
@@ -83,11 +88,6 @@ link_file () {
       then
 
         skip=true;
-
-      elif [ -n $REMOTE ]
-      then
-
-        backup=true;
 
       else
 
