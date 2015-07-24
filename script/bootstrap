@@ -76,7 +76,7 @@ link_file () {
 
     if [ -n $REMOTE ]
     then
-      backup_all=true
+      backup_all="true"
     fi
 
     if [ "$overwrite_all" == "false" ] && [ "$backup_all" == "false" ] && [ "$skip_all" == "false" ]
