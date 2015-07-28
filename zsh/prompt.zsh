@@ -77,7 +77,6 @@ rb_prompt() {
 }
 
 py_prompt() {
-  export VIRTUAL_ENV_DISABLE_PROMPT=1
   if [[ -n "$VIRTUAL_ENV" ]]
   then
     venv=$(basename "$VIRTUAL_ENV")
