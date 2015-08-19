@@ -12,6 +12,17 @@ then
   source ~/.localrc
 fi
 
+os='unknown'
+unamestr=`uname -s`
+if [[ "$unamestr" == "Darwin" ]]
+then
+  os='OSX'
+elif [[ "$unamestr" == "Linux" ]]
+then
+  os='LINUX'
+fi
+export OS=$os
+
 # all of our zsh files
 typeset -U config_files
 config_files=($ZSH/**/*.zsh)
