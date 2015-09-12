@@ -88,6 +88,9 @@ endif
 " Place cursor on indented line between curly braces
 inoremap {<CR> {<CR>}<Esc>O
 
+" Go to previous tab
+nnoremap gr gT
+
 "Vim only defaults to 3 matches so this is the syntax for the first 2
 "highlight any extra white space green
 "match ExtraWhitespace /\s\+$\| \+\ze\t/   This will highlight only white
