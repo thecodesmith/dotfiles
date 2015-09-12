@@ -126,6 +126,16 @@ map <S-F5> <Esc>:%!xxd -r<cr>
 map <F6> :retab<cr>:%s/\s\+$//<cr>:noh<cr>
 map! <F6> <Esc>:retab<cr>:%s/\s\+$//<cr>:noh<cr>a
 
+function! <SID>StripTrailingWhitespace()
+  let l = line(".")
+  let c = col(".")
+  %s/\s\+$//e
+  call cursor(l, c)
+endfunction
+
+" Strip trailing whitespace automatically on file save
+autocmd BufWritePre * :call <SID>StripTrailingWhitespace()
+
 " This was not working on linux
 "set clipboard=unnamed
 set pastetoggle=<F8>
