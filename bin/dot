@@ -6,11 +6,16 @@
 # to make sure you're on the latest and greatest.
 export ZSH=$HOME/.dotfiles
 
-# Set OS X defaults
-$ZSH/osx/set-defaults.sh
+# Update dotfiles to latest from repo
+git -C $ZSH pull
 
-# Upgrade homebrew
-brew update
+if [[ `os` == 'osx' ]]; then
+  # Set OS X defaults
+  $ZSH/osx/set-defaults.sh
 
-# Install homebrew packages
-$ZSH/homebrew/install.sh 2>&1
+  # Upgrade homebrew
+  brew update
+
+  # Install homebrew packages
+  $ZSH/homebrew/install.sh 2>&1
+fi
