@@ -29,6 +29,7 @@ Plugin 'thecodesmith/vim-colorscheme-codesmith'
 Plugin 'tpope/vim-commentary'
 Plugin 'tpope/vim-abolish'
 Plugin 'tpope/vim-ragtag'
+Plugin 'jpalardy/vim-slime'
 Plugin 'godlygeek/tabular'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'terryma/vim-multiple-cursors'
@@ -37,6 +38,10 @@ Plugin 'edsono/vim-matchit'
 Plugin 'vim-scripts/groovyindent'
 Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
+Plugin 'mileszs/ack.vim'
+Plugin 'msanders/snipmate.vim'
+Plugin 'mtth/scratch.vim'
+Plugin 'rstacruz/sparkup'
 """ }}} End Vundle plugins
 
 """ Finalize Vundle
@@ -58,42 +63,82 @@ set term=screen-256color
 set guifont=Lucida\ Console
 colorscheme codesmith
 
-set tabstop=4
-set shiftwidth=4
-set expandtab
+set tabstop=4       " tab is 4 spaces
+set shiftwidth=4    " number of spaces for autoindenting
 set softtabstop=4
-set nowrap
+set expandtab
+set autoindent      " always set autoindenting on
+set copyindent      " copy the previous indentation on autoindenting
+set nowrap          " don't wrap lines
 set backspace=indent,eol,start
 
-set number
-set colorcolumn=80
+set number          " show line numbers
+set colorcolumn=80  " highligh column 80
 set ruler
 set showcmd
-set hlsearch
-set ignorecase
-set incsearch
+set ignorecase      " ignore case when searching
+set smartcase       " ignore case only if search pattern is all lowercase
+set hlsearch        " highlight search terms
+set incsearch       " show search matches while typing
 highlight Search ctermbg=yellow ctermfg=black cterm=NONE
+set history=1000    " remember more commands and search history
+set undolevels=1000 " increase undo levels
+set wildignore=*.swp,*.bak,*.pyc,*.class
+set visualbell      " don't beep
+set noerrorbells    " don't beep
 
-" Set the tags file
-set tags=tags;
+set hidden          " hide buffers instead of closing them
+set nobackup        " don't write a backup file
 
-""" Plugin-specific configurations
+set tags=tags;      " Set the tags file
+
+" Save some keystrokes
+nnoremap ; :
+
+" Change leader key from \ to <Space>
+let mapleader = "\<Space>"
+
+" Map <leader>/ to clear search highlighting
+nmap <silent> <leader>/ :nohlsearch<CR>
+
+" Use Perl/Python style regex when searching
+nnoremap / /\v
+vnoremap / /\v
+
+""" Plugin-specific configurations {{{
 
 " Configure vim-multiple-cursors
 let g:multi_cursor_use_default_mapping=0
 let g:multi_cursor_next_key='<C-n>'
 let g:multi_cursor_quit_key='<Esc>'
 
-if exists(":Tabularize")
-  vnoremap <leader>a :Tabularize<space>/
-endif
+" Slime
+let g:slime_python_ipython = 1
 
-if exists(":NERDTree")
-  let NERDTreeIgnore = ['\.pyc$']
-endif
+" Scratch
+nnoremap <leader>s :Scratch<CR>
+vnoremap <leader>s :Scratch<CR>
+
+" Tabularize
+nnoremap <leader>t :Tabularize<Space>/
+vnoremap <leader>t :Tabularize<Space>/
+
+" NERDTree
+let NERDTreeIgnore = ['\.pyc$', '\.class$']
+
+" Ack
+nnoremap <leader>a :Ack<Space>
+
+""" End plugin-specific configurations }}}
 
 " Place cursor on indented line between curly braces
 inoremap {<CR> {<CR>}<Esc>O
+
+" Edit $MYVIMRC on the fly
+nnoremap <leader>ev <C-w><C-v><C-l>:e $MYVIMRC<CR>
+
+" Open a split window with <leader>w and switch to it
+nnoremap <leader>w <C-w>v<C-w>l
 
 " Go to previous tab
 nnoremap gr gT
@@ -120,16 +165,15 @@ endfunction
 nnoremap <F3> :call Match_long_lines()<CR>
 inoremap <F3> <Esc>:call Match_long_lines()<CR>a
 
-" F2 now toggles the show line numbers
+" F2 toggles showing line numbers
 map <F2> :set invnumber<cr>a
 map! <F2> <Esc>:set invnumber<cr>
 
-" F5 now toggles binary mode
+" F5 toggles binary mode
 map <F5> :%!xxd<cr>a
 map <S-F5> <Esc>:%!xxd -r<cr>
 
-" F6 will delete extra spaces at the end of a line and will
-"change tabs to spaces
+" F6 deletes extra spaces at the end of a line and changes tabs to spaces
 map <F6> :retab<cr>:%s/\s\+$//<cr>:noh<cr>
 map! <F6> <Esc>:retab<cr>:%s/\s\+$//<cr>:noh<cr>a
 
@@ -150,6 +194,12 @@ set pastetoggle=<F8>
 " Don't lose selection after indent
 vnoremap < <gv
 vnoremap > >gv
+
+" Easier window navigation
+map <C-h> <C-w>h
+map <C-j> <C-w>j
+map <C-k> <C-w>k
+map <C-l> <C-w>l
 
 """ Window swapping functions {{{
 
@@ -182,11 +232,10 @@ nnoremap <C-l> :call MarkWindowSwap()<CR> <C-w>l :call DoWindowSwap()<CR>
 
 """ End window swapping functions }}}
 
-" Experimental scripts
-"autocmd BufWritePost * execute '!deploy.sh'
+" Save all buffers when vim loses focus
+au FocusLost * :wa
 
 " TODO List
 " tpope/fugitive.vim -- Git plugin
 " tpope/surround.vim
 " cheat sheet: always be learning 5-7 new things
-" setlocal colorcolumn=80
