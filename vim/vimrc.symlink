@@ -40,7 +40,7 @@ Plugin 'vim-scripts/taglist.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'kien/ctrlp.vim'
-Plugin 'mileszs/ack.vim'
+Plugin 'dkprice/vim-easygrep'
 Plugin 'msanders/snipmate.vim'
 Plugin 'mtth/scratch.vim'
 Plugin 'rstacruz/sparkup'
@@ -110,11 +110,14 @@ vnoremap / /\v
 
 """ Plugin-specific configurations {{{
 
-" Ack
-nnoremap <leader>a :Ack<Space>
-
 " CtrlP
 let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
+
+" EasyGrep
+let g:EasyGrepMode=2
+let g:EasyGrepCommand=0
+let g:EasyGrepRecursive=1
+let g:EasyGrepIgnoreCase=1
 
 " Multiple cursors
 let g:multi_cursor_use_default_mapping=0
@@ -153,28 +156,6 @@ nnoremap <leader>w <C-w>v<C-w>l
 
 " Go to previous tab
 nnoremap gr gT
-
-"Vim only defaults to 3 matches so this is the syntax for the first 2
-"highlight any extra white space green
-"match ExtraWhitespace /\s\+$\| \+\ze\t/   This will highlight only white
-"space at the end of a tab
-"Highlight any characters above 120 places red
-
-highlight ExtraWhitespace ctermbg=darkgreen guibg=darkgreen
-let s:longlines = 1
-function! Match_long_lines()
-  if s:longlines == 1
-    let s:longlines = 0
-    :match ExtraWhitespace /\s\+$\|\t/
-    :2match ErrorMsg '\%>120v.\+'
-  else
-    let s:longlines = 1
-    :match
-    :2match
-  endif
-endfunction
-nnoremap <F3> :call Match_long_lines()<CR>
-inoremap <F3> <Esc>:call Match_long_lines()<CR>a
 
 " F2 toggles showing line numbers
 map <F2> :set invnumber<cr>a
