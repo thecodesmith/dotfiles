@@ -36,8 +36,10 @@ Plugin 'terryma/vim-multiple-cursors'
 Plugin 'Townk/vim-autoclose'
 Plugin 'edsono/vim-matchit'
 Plugin 'vim-scripts/groovyindent'
+Plugin 'vim-scripts/taglist'
 Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
+Plugin 'kien/ctrlp.vim'
 Plugin 'mileszs/ack.vim'
 Plugin 'msanders/snipmate.vim'
 Plugin 'mtth/scratch.vim'
@@ -84,7 +86,7 @@ set incsearch       " show search matches while typing
 highlight Search ctermbg=yellow ctermfg=black cterm=NONE
 set history=1000    " remember more commands and search history
 set undolevels=1000 " increase undo levels
-set wildignore=*.swp,*.bak,*.pyc,*.class
+set wildignore=*.swp,*.so,*.bak,*.pyc,*.class,*.zip,*/tmp/*
 set visualbell      " don't beep
 set noerrorbells    " don't beep
 
@@ -108,10 +110,19 @@ vnoremap / /\v
 
 """ Plugin-specific configurations {{{
 
-" Configure vim-multiple-cursors
+" Ack
+nnoremap <leader>a :Ack<Space>
+
+" CtrlP
+let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
+
+" Multiple cursors
 let g:multi_cursor_use_default_mapping=0
 let g:multi_cursor_next_key='<C-n>'
 let g:multi_cursor_quit_key='<Esc>'
+
+" NERDTree
+let NERDTreeIgnore = ['\.pyc$', '\.class$']
 
 " Slime
 let g:slime_python_ipython = 1
@@ -124,11 +135,9 @@ vnoremap <leader>s :Scratch<CR>
 nnoremap <leader>t :Tabularize<Space>/
 vnoremap <leader>t :Tabularize<Space>/
 
-" NERDTree
-let NERDTreeIgnore = ['\.pyc$', '\.class$']
-
-" Ack
-nnoremap <leader>a :Ack<Space>
+" Taglist
+map <F4> <Esc>:TlistToggle<CR>
+let s:tlist_def_groovy_settings = 'groovy;p:package;c:class;i:interface;f:function;v:variables'
 
 """ End plugin-specific configurations }}}
 
@@ -137,6 +146,7 @@ inoremap {<CR> {<CR>}<Esc>O
 
 " Edit $MYVIMRC on the fly
 nnoremap <leader>ev <C-w><C-v><C-l>:e $MYVIMRC<CR>
+nnoremap <leader>sv :source $MYVIMRC<CR>
 
 " Open a split window with <leader>w and switch to it
 nnoremap <leader>w <C-w>v<C-w>l
@@ -201,37 +211,6 @@ map <C-h> <C-w>h
 map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
-
-""" Window swapping functions {{{
-
-function! MarkWindowSwap()
-  " marked window number
-  let g:markedWinNum = winnr()
-  let g:markedBufNum = bufnr("%")
-endfunction
-
-function! DoWindowSwap()
-  let curWinNum = winnr()
-  let curBufNum = bufnr("%")
-  " Switch focus to marked window
-  exe g:markedWinNum . "wincmd w"
-
-  " Load current buffer on marked window
-  exe 'hide buf' curBufNum
-
-  " Switch focus to current window
-  exe curWinNum . "wincmd w"
-
-  " Load marked buffer on current window
-  exe 'hide buf' g:markedBufNum
-endfunction
-
-nnoremap <C-h> :call MarkWindowSwap()<CR> <C-w>h :call DoWindowSwap()<CR>
-nnoremap <C-j> :call MarkWindowSwap()<CR> <C-w>j :call DoWindowSwap()<CR>
-nnoremap <C-k> :call MarkWindowSwap()<CR> <C-w>k :call DoWindowSwap()<CR>
-nnoremap <C-l> :call MarkWindowSwap()<CR> <C-w>l :call DoWindowSwap()<CR>
-
-""" End window swapping functions }}}
 
 " Save all buffers when vim loses focus
 au FocusLost * :wa
