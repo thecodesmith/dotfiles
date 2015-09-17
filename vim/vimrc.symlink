@@ -135,8 +135,8 @@ nnoremap <leader>s :Scratch<CR>
 vnoremap <leader>s :Scratch<CR>
 
 " Tabularize
-nnoremap <leader>t :Tabularize<Space>/
-vnoremap <leader>t :Tabularize<Space>/
+nnoremap <leader>= :Tabularize<Space>/
+vnoremap <leader>= :Tabularize<Space>/
 
 " Taglist
 map <F4> <Esc>:TlistToggle<CR>
@@ -195,6 +195,31 @@ map <C-l> <C-w>l
 
 " Save all buffers when vim loses focus
 au FocusLost * :wa
+
+" Open file under cursor
+map <C-i> :call OpenVariableUnderCursor(expand("<cword>"))<CR>
+map <C-t> :call OpenTestUnderCursor(bufname("%"))<CR>
+map <leader>h :call FindSubClasses(expand("<cword>"))<CR>
+
+function! OpenVariableUnderCursor(varName)
+  let filename = substitute(a:varName, '(<w+>)', 'u1', 'g')
+  :call OpenFileUnderCursor(filename)
+endfunction
+
+function! OpenTestUnderCursor(varName)
+  let filename = substitute(a:varName, '\.groovy', 'Spec', '')
+  let filename = substitute(filename, 'grails-app/\(controllers\|domain\|services\)', 'src/test/groovy', '')
+  :call OpenFileUnderCursor(filename)
+endfunction
+
+function! OpenFileUnderCursor(filename)
+  let ext = fnamemodify(expand("%:p"), ":t:e")
+  execute ":find " . a:filename . "." . ext
+endfunction
+
+function! FindSubClasses(filename)
+  execute ":Grep (implements|extends) " . a:filename
+endfunction
 
 " TODO List
 " tpope/fugitive.vim -- Git plugin
