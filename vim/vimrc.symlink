@@ -42,6 +42,7 @@ Plugin 'mileszs/ack.vim'
 Plugin 'msanders/snipmate.vim'
 Plugin 'mtth/scratch.vim'
 Plugin 'rstacruz/sparkup'
+Plugin 'chase/vim-ansible-yaml'
 """ }}} End Vundle plugins
 
 """ Finalize Vundle
