@@ -9,5 +9,8 @@ then
   alias la='gls -A --color'
 fi
 
-alias pbcopy='xsel --clipboard --input'
-alias pbpaste='xsel --clipboard --output'
+if [[ $OS == 'LINUX' ]]
+then
+  alias pbcopy='xsel --clipboard --input'
+  alias pbpaste='xsel --clipboard --output'
+fi
