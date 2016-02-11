@@ -25,6 +25,7 @@ call vundle#begin()
 
 """ Put Vundle plugins here {{{
 Plugin 'gmarik/Vundle.vim'
+
 Plugin 'thecodesmith/vim-colorscheme-codesmith'
 Plugin 'tpope/vim-commentary'
 Plugin 'tpope/vim-abolish'
@@ -32,12 +33,9 @@ Plugin 'tpope/vim-ragtag'
 Plugin 'tpope/vim-surround'
 Plugin 'jpalardy/vim-slime'
 Plugin 'godlygeek/tabular'
-Plugin 'kchmck/vim-coffee-script'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'Townk/vim-autoclose'
 Plugin 'edsono/vim-matchit'
-Plugin 'vim-scripts/groovyindent-unix'
-Plugin 'vim-scripts/groovy.vim'
 Plugin 'vim-scripts/taglist.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
@@ -46,6 +44,12 @@ Plugin 'dkprice/vim-easygrep'
 Plugin 'msanders/snipmate.vim'
 Plugin 'mtth/scratch.vim'
 Plugin 'rstacruz/sparkup'
+
+" Syntax highlighting
+Plugin 'vim-scripts/groovyindent-unix'
+Plugin 'vim-scripts/groovy.vim'
+Plugin 'kchmck/vim-coffee-script'
+Plugin 'posva/vim-vue'
 Plugin 'chase/vim-ansible-yaml'
 """ }}} End Vundle plugins
 
@@ -78,7 +82,6 @@ set nowrap          " don't wrap lines
 set backspace=indent,eol,start
 
 set number          " show line numbers
-set colorcolumn=80  " highligh column 80
 set ruler
 set showcmd
 set ignorecase      " ignore case when searching
@@ -200,6 +203,9 @@ set pastetoggle=<F8>
 
 " F9 opens markdown files in Chrome
 autocmd BufEnter *.md exe 'noremap <F9> :!chrome %:p<CR>'
+
+" Highlight column 80 in Python files
+autocmd BufEnter *.py exe 'set colorcolumn=80'
 
 " Ctrl-b switches to previously open buffer
 nnoremap <C-b> :b#<CR>
