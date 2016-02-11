@@ -1,0 +1,1 @@
+cp ~/.dotfiles/git/hooks/* ./.git/hooks
