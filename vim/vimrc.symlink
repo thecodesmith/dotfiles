@@ -47,7 +47,7 @@ Plugin 'rstacruz/sparkup'
 
 " Syntax highlighting
 Plugin 'vim-scripts/groovyindent-unix'
-Plugin 'vim-scripts/groovy.vim'
+Plugin 'thecodesmith/groovy.vim'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'posva/vim-vue'
 Plugin 'chase/vim-ansible-yaml'
