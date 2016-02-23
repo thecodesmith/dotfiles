@@ -10,6 +10,5 @@ fi
 if [ ! -d $BUNDLE_DIR/Vundle.vim ]; then
     pushd $BUNDLE_DIR
     git clone $VUNDLE_REPO
-    vim +PluginInstall
     popd
 fi
