@@ -18,13 +18,16 @@ fi
 
 # Install homebrew packages
 brew install caskroom/cask/brew-cask
-brew install grc
-brew install coreutils
-brew install spark
 brew install git
-brew install vim
+brew install gpg
+brew install grc
+brew install htop
 brew install hub
-brew install ack
+brew install nmap
+brew install tmux
+brew install vim
+
+# UNIX tools
 brew install findutils --default-names
 brew install gnu-sed --default-names
 brew install gnu-tar --default-names
@@ -36,10 +39,6 @@ brew install binutils
 brew install diffutils
 brew install gzip
 brew install watch
-brew install tmux
 brew install wget
-brew install nmap
-brew install gpg
-brew install htop
 
 exit 0
