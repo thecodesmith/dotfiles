@@ -31,7 +31,8 @@ Plugin 'tpope/vim-commentary'
 Plugin 'tpope/vim-abolish'
 Plugin 'tpope/vim-ragtag'
 Plugin 'tpope/vim-surround'
-Plugin 'jpalardy/vim-slime'
+Plugin 'tpope/vim-repeat'
+" Plugin 'tpope/fugitive.vim'   " Git plugin
 Plugin 'godlygeek/tabular'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'Townk/vim-autoclose'
@@ -46,7 +47,7 @@ Plugin 'mtth/scratch.vim'
 Plugin 'rstacruz/sparkup'
 
 " Syntax highlighting
-Plugin 'vim-scripts/groovyindent-unix'
+Plugin 'thecodesmith/groovyindent-unix'
 Plugin 'thecodesmith/groovy.vim'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'posva/vim-vue'
@@ -247,8 +248,3 @@ endfunction
 function! FindSubClasses(filename)
   execute ":Grep (implements|extends) " . a:filename
 endfunction
-
-" TODO List
-" tpope/fugitive.vim -- Git plugin
-" tpope/surround.vim
-" cheat sheet: always be learning 5-7 new things
