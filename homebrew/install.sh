@@ -23,6 +23,7 @@ brew install gpg
 brew install grc
 brew install htop
 brew install hub
+brew install gist
 brew install nmap
 brew install tmux
 brew install vim
