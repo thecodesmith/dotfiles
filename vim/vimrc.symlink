@@ -45,10 +45,14 @@ Plugin 'dkprice/vim-easygrep'
 Plugin 'msanders/snipmate.vim'
 Plugin 'mtth/scratch.vim'
 Plugin 'rstacruz/sparkup'
+Plugin 'airblade/vim-rooter' " Automatically change to root directory of project
 
 " Syntax highlighting
 Plugin 'thecodesmith/groovyindent-unix'
 Plugin 'thecodesmith/groovy.vim'
+" TODO: This vim-gradle plugin is good, but should be changed to use the same syntax
+" highlighting as the groovy.vim plugin.
+" Plugin 'vim-scripts/vim-gradle' " Add gradle compiler for vim, groovy syntax highlighting in gradle files
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'posva/vim-vue'
 Plugin 'chase/vim-ansible-yaml'
