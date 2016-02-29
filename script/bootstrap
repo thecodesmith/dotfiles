@@ -163,7 +163,6 @@ archive_dotfiles () {
 
 if ! $REMOTE
 then
-  setup_gitconfig
   archive_dotfiles
 fi
 
