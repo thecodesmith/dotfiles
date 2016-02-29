@@ -1,0 +1,10 @@
+# Quick jump to common directories
+to() {
+  if [[ "$1" == "." ]]
+  then
+    location="${HOME}/.dotfiles"
+  else
+    location="$1"
+  fi
+  pushd $location
+}
