@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+
+vmdir="/Applications/VMware Fusion.app/Contents/Library"
+
+if [[ -d "$vmdir" ]]
+then
+  cd "$vmdir"
+  running_vms=`./vmrun -T fusion list | grep '^/' | wc -l`
+
+  if [ $running_vms -gt 0 ]
+  then
+    ./vmrun -T fusion list | grep '^/' | sed 's/.*/"&"/' | xargs ./vmrun -T fusion suspend
+  fi
+fi
+
+osascript -e 'tell application "Finder" to eject (every disk whose ejectable is true)'
