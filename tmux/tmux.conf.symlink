@@ -1,3 +1,6 @@
+# Use default shell
+set-option -g default-shell $SHELL
+
 # Change default prefix to Ctrl-a
 set -g prefix C-a
 unbind C-b
@@ -33,11 +36,44 @@ bind -r J resize-pane -D 5
 bind -r K resize-pane -U 5
 bind -r L resize-pane -R 5
 
-# Handling the mouse
-setw -g mode-mouse off
-set -g mouse-select-pane off
-set -g mouse-resize-pane off
-set -g mouse-select-window off
+# Disable mouse input
+setw -g mouse off
 
 # Use 256 colors in tmux
 set -g default-terminal "screen-256color"
+
+# Colors
+
+set -g status-utf8 on
+
+## Status bar
+set -g status-fg white
+set -g status-bg colour235
+
+## Window list
+setw -g window-status-fg cyan
+setw -g window-status-bg default
+setw -g window-status-attr dim
+
+## Pane borders
+set -g pane-border-fg colour236
+set -g pane-active-border-fg colour246
+# set -g pane-border-bg color
+# set -g pane-active-border-bg color
+
+## Message bar
+set -g message-fg white
+set -g message-bg black
+set -g message-attr bright
+
+## Status bar left
+set -g status-left-length 40
+set -g status-left "#[fg=colour240]Session: #S #[fg=yellow]#I #[fg=cyan]#P"
+
+## Status bar right
+set -g status-right "#[fg=colour240]%d %b %R"
+
+## Window activity
+set -g status-interval 5
+setw -g monitor-activity on
+set -g visual-activity on
