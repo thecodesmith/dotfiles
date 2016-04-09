@@ -46,12 +46,12 @@ Plugin 'msanders/snipmate.vim'
 Plugin 'mtth/scratch.vim'
 Plugin 'rstacruz/sparkup'
 Plugin 'airblade/vim-rooter' " Automatically change to root directory of project
+Plugin 'christoomey/vim-tmux-navigator'
 
 " Syntax highlighting
-Plugin 'thecodesmith/groovyindent-unix'
-Plugin 'thecodesmith/groovy.vim'
+Plugin 'thecodesmith/vim-groovy'
 " TODO: This vim-gradle plugin is good, but should be changed to use the same syntax
-" highlighting as the groovy.vim plugin.
+" highlighting as the vim-groovy plugin.
 " Plugin 'vim-scripts/vim-gradle' " Add gradle compiler for vim, groovy syntax highlighting in gradle files
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'posva/vim-vue'
@@ -227,6 +227,16 @@ map <C-l> <C-w>l
 
 " Save all buffers when vim loses focus
 au FocusLost * :wa
+
+" autocmd FileType vue call SetIndent(2)
+" autocmd FileType html call SetIndent(2)
+
+" function! SetIndent(width)
+"   echo "setting width " . width
+"   set tabstop = a:width
+"   set shiftwidth = a:width
+"   set softtabstop = a:width
+" endfunction
 
 " Open file under cursor
 map <C-i> :call OpenVariableUnderCursor(expand("<cword>"))<CR>
