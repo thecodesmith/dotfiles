@@ -1,3 +1,5 @@
+## General
+
 # Use default shell
 set-option -g default-shell $SHELL
 
@@ -17,6 +19,8 @@ bind r source-file ~/.tmux.conf \; display "Reloaded!"
 
 # Press Ctrl-a twice to send to application inside tmux
 bind C-a send-prefix
+
+## Navigation
 
 # Splitting panes
 bind | split-window -h
@@ -46,41 +50,59 @@ bind -r L resize-pane -R 5
 # Disable mouse input
 setw -g mouse off
 
+## Colors
+
 # Use 256 colors in tmux
 set -g default-terminal "screen-256color"
 
-# Colors
-
+# Status bar
 set -g status-utf8 on
-
-## Status bar
 set -g status-fg white
 set -g status-bg colour235
 
-## Window list
+# Window list
 setw -g window-status-fg cyan
 setw -g window-status-bg default
 setw -g window-status-attr dim
 
-## Pane borders
+# Pane borders
 set -g pane-border-fg colour236
 set -g pane-border-bg colour236
 set -g pane-active-border-fg colour239
 set -g pane-active-border-bg colour239
 
-## Message bar
+# Message bar
 set -g message-fg white
 set -g message-bg colour235
 set -g message-attr bright
 
-## Status bar left
+# Status bar left
 set -g status-left-length 40
 set -g status-left "#[fg=colour240]Session: #S  #[fg=yellow]#I  #[fg=cyan]#P"
 
-## Status bar right
+# Status bar right
 set -g status-right "#[fg=colour240]%b %d %H:%M"
 
-## Window activity
+# Window activity
 set -g status-interval 5
 setw -g monitor-activity on
 set -g visual-activity on
+
+## Text and Buffers
+
+# Use Vim key bindings in copy mode
+setw -g mode-keys vi
+
+# Use Escape to enter copy mode
+unbind [
+bind Escape copy-mode
+
+# Setup 'v', 'y', and 'p' to select, copy and paste as in Vim
+bind -t vi-copy v begin-selection
+bind -t vi-copy y copy-selection
+unbind p
+bind p paste-buffer
+
+# Update default binding of Enter to also use copy-pipe
+unbind -t vi-copy Enter
+bind -t vi-copy Enter copy-pipe "reattach-to-user-namespace pbcopy"
