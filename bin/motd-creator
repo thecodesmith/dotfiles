@@ -1,0 +1,4 @@
+host="$1"
+message="$2"
+
+figlet "$2" | sed 's/^/    /' | ssh $host 'cat > /etc/motd'
