@@ -1,0 +1,4 @@
+pushd ~/Notes
+vim -c "NERDTreeToggle"
+
+# vim ft=sh
