@@ -1,4 +1,14 @@
+if [ $# -eq 0 ]
+then
+    echo "Usage: motd-creator <hostname> <message>"
+    exit 0
+fi
+
 host="$1"
 message="$2"
 
-figlet "$2" | sed 's/^/    /' | ssh $host 'cat > /etc/motd'
+echo "Creating banner at $host:~/motd"
+figlet "$2" | sed 's/^/    /' | ssh $host 'cat > ~/motd'
+
+echo "Copying to /etc/motd"
+ssh $host 'sudo cp ~/motd /etc/motd'
