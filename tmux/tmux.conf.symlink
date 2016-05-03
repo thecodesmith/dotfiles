@@ -83,11 +83,6 @@ set -g status-left "#[fg=colour240]Session: #S  #[fg=yellow]#I  #[fg=cyan]#P"
 # Status bar right
 set -g status-right "#[fg=colour240]%b %d %H:%M"
 
-# Window activity
-set -g status-interval 5
-setw -g monitor-activity on
-set -g visual-activity on
-
 ## Text and Buffers
 
 # Use Vim key bindings in copy mode
