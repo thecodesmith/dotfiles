@@ -13,6 +13,8 @@ ss() {
     then
         sudo defaults write /var/db/launchd.db/com.apple.launchd/overrides.plist com.apple.screensharing -dict Disabled -bool false
         sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.screensharing.plist
+
+        ifconfig | grep inet | cut -f4 -d ' ' | grep -v ':' | grep -v '^127.0.0.1'
     elif [[ "$1" == "off" ]]
     then
         sudo defaults write /var/db/launchd.db/com.apple.launchd/overrides.plist com.apple.screensharing -dict Disabled -bool true

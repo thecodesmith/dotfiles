@@ -43,20 +43,19 @@ Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'kien/ctrlp.vim'
 Plugin 'dkprice/vim-easygrep'
 Plugin 'msanders/snipmate.vim'
-Plugin 'mtth/scratch.vim'
 Plugin 'rstacruz/sparkup'
 Plugin 'airblade/vim-rooter' " Automatically change to root directory of project
 Plugin 'christoomey/vim-tmux-navigator'
-Plugin 'sjl/vitality.vim'
 
-" Syntax highlighting
+" Language support
+Plugin 'tpope/vim-fireplace'
+Plugin 'tpope/vim-classpath'
+Plugin 'kchmck/vim-coffee-script'
+Plugin 'chase/vim-ansible-yaml'
 Plugin 'thecodesmith/vim-groovy'
 " TODO: This vim-gradle plugin is good, but should be changed to use the same syntax
 " highlighting as the vim-groovy plugin.
 " Plugin 'vim-scripts/vim-gradle' " Add gradle compiler for vim, groovy syntax highlighting in gradle files
-Plugin 'kchmck/vim-coffee-script'
-Plugin 'posva/vim-vue'
-Plugin 'chase/vim-ansible-yaml'
 """ }}} End Vundle plugins
 
 """ Finalize Vundle
@@ -243,6 +242,9 @@ noremap <C-l> <C-w>l
 
 " Save all buffers when vim loses focus
 au FocusLost * :wa
+
+" Format XML
+map @@x !%xmllint --format -<CR>
 
 " autocmd FileType vue call SetIndent(2)
 " autocmd FileType html call SetIndent(2)
