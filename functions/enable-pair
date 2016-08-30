@@ -16,5 +16,5 @@ enable-pair() {
 
     # Add pair user public key(s)
     touch ~/.ssh/authorized_keys
-    gh-auth add --users "$1" --command="$( which tmux ) attach -t pair"
+    gh-auth add --users="$1" --command="$( which tmux ) attach -t pair"
 }
