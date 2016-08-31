@@ -16,3 +16,4 @@ then
 fi
 
 alias jsonify='python -m json.tool'
+alias x='xargs'
