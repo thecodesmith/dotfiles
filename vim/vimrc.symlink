@@ -53,6 +53,8 @@ Plugin 'tpope/vim-classpath'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'chase/vim-ansible-yaml'
 Plugin 'thecodesmith/vim-groovy'
+Plugin 'PProvost/vim-ps1'
+Plugin 'fatih/vim-go'
 " TODO: This vim-gradle plugin is good, but should be changed to use the same syntax
 " highlighting as the vim-groovy plugin.
 " Plugin 'vim-scripts/vim-gradle' " Add gradle compiler for vim, groovy syntax highlighting in gradle files
