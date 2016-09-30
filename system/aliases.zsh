@@ -13,6 +13,10 @@ if [[ $OS == 'LINUX' ]]
 then
   alias pbcopy='xsel --clipboard --input'
   alias pbpaste='xsel --clipboard --output'
+  alias bigs='du -hs * | sort -hr'
+elif [[ `os` == 'osx' ]]
+then
+  alias bigs='du -hs * | gsort -hr'
 fi
 
 alias jsonify='python -m json.tool'
