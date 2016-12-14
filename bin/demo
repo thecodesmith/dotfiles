@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+prefs=~/Library/Preferences/ByHost/com.apple.notificationcenterui.*.plist
+
+isDoNotDisturbOn() {
+    status=$(plutil -convert xml1 -o - $prefs | grep true)
+    [[ $status ]]
+}
+
+setDoNotDisturb() {
+    defaults write $prefs doNotDisturb $1
+}
+
+state="$1"
+
+if [ "$state" = "" ]
+then
+    echo "Usage: demo [on|off|status]"
+    exit 1
+fi
+
+if [ "$state" = "on" ] && ! isDoNotDisturbOn
+then
+    setDoNotDisturb 1 || echo "Failed"
+elif [ "$state" = "off" ] && isDoNotDisturbOn
+then
+    setDoNotDisturb 0 || echo "Failed"
+elif [ "$state" = "status" ]
+then
+    if isDoNotDisturbOn
+    then
+        echo "on"
+    else
+        echo "off"
+    fi
+fi
