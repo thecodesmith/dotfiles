@@ -2,9 +2,16 @@
 
 set -e
 
+TODOS=~/.todo
+
+if ! [ -f $TODOS ]
+then
+    touch $TODOS
+fi
+
 if [ "$#" -eq "0" ]
 then
-    find ~/Desktop -name "todo*" -printf "%f\n"
+    cat $TODOS | pygmentize -l markdown
 else
-    touch ~/Desktop/"todo: $*"
+    echo $* >> $TODOS
 fi
