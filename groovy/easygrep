@@ -1,3 +1,0 @@
-# Add the following two lines to ~/.vim/bundle/vim-easygrep/plugin/EasyGrepFileAssociations
-Groovy=*.groovy *.gsp *.gradle <Java> <Properties>
-Properties=*.properties
