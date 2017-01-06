@@ -12,6 +12,9 @@ fi
 if [ "$#" -eq "0" ]
 then
     cat $TODOS | pygmentize -l markdown
+elif [ "$#" -eq "1" ] && [ "$1" == "e" ]
+then
+    vim $TODOS
 else
     echo $* >> $TODOS
 fi
