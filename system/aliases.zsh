@@ -19,5 +19,26 @@ then
   alias bigs='du -hs * | gsort -hr'
 fi
 
-alias jsonify='python -m json.tool'
-alias x='xargs'
+alias json='python -m json.tool'
+alias js=json
+alias x=xargs
+alias bash='PS1="in $(pwd) › " bash'
+
+close_all_panes() {
+    YELLOW='\033[0;33m'
+    RESET='\033[0m'
+    echo -n "${YELLOW}Press <return> to close all panes ${RESET}"
+    read
+    tmux kill-pane -a
+    tmux kill-pane
+}
+
+# typos
+alias clera=clear
+alias cler=clear
+alias eixt=exit
+alias eit=exit
+alias exi=exit
+alias :q=exit
+alias :qa=close_all_panes
+alias :wq=exit
