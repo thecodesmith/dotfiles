@@ -1,0 +1,11 @@
+#!/bin/bash
+
+RAIN_FILE=rain.m4a
+RAIN_PATH="$HOME/Audio/Sound/$RAIN_FILE"
+VOLUME=0.2
+
+if pgrep -f $RAIN_FILE 2>&1 >/dev/null; then
+  pkill -f $RAIN_FILE
+else
+  afplay -v $VOLUME $RAIN_PATH &
+fi
