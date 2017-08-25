@@ -32,7 +32,7 @@ Plugin 'tpope/vim-abolish'
 Plugin 'tpope/vim-ragtag'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-repeat'
-" Plugin 'tpope/fugitive.vim'   " Git plugin
+Plugin 'tpope/vim-fugitive'
 Plugin 'godlygeek/tabular'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'Raimondi/delimitMate'
@@ -46,10 +46,11 @@ Plugin 'msanders/snipmate.vim'
 Plugin 'rstacruz/sparkup'
 Plugin 'airblade/vim-rooter' " Automatically change to root directory of project
 Plugin 'christoomey/vim-tmux-navigator'
+Plugin 'editorconfig/editorconfig-vim'
 
 " Language support
-Plugin 'tpope/vim-fireplace'
-Plugin 'tpope/vim-classpath'
+" Plugin 'tpope/vim-fireplace'
+" Plugin 'tpope/vim-classpath'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'chase/vim-ansible-yaml'
 Plugin 'thecodesmith/vim-groovy'
