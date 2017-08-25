@@ -1,21 +1,6 @@
 #!/usr/bin/env bash
 #
 # Configures .gitconfig, symlinks dotfiles to $HOME directory
-# To set up on a remote client through ssh, use "./bootstrap -r"
-
-REMOTE=false
-
-while test $# -gt 0
-do
-  case "$1" in
-    -r) printf "\n  Bootstrapping remote client: linking dotfiles only\n"
-        REMOTE=true
-      ;;
-    *)
-      ;;
-  esac
-  shift
-done
 
 cd "$(dirname "$0")/.."
 DOTFILES_ROOT=$(pwd)
@@ -73,11 +58,6 @@ link_file () {
 
   if [ -f "$dst" -o -d "$dst" -o -L "$dst" ]
   then
-
-    if [ -n "$REMOTE" ]
-    then
-      backup_all="true"
-    fi
 
     if [ "$overwrite_all" == "false" ] && [ "$backup_all" == "false" ] && [ "$skip_all" == "false" ]
     then
@@ -156,15 +136,6 @@ install_dotfiles () {
     link_file "$src" "$dst"
   done
 }
-
-archive_dotfiles () {
-  sh "${DOTFILES_ROOT}/script/archive"
-}
-
-if ! $REMOTE
-then
-  archive_dotfiles
-fi
 
 setup_gitconfig
 install_dotfiles
