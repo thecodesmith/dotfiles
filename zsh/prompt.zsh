@@ -9,6 +9,13 @@ else
   git="/usr/bin/git"
 fi
 
+last_exit_code() {
+  local LAST_EXIT_CODE="%{$fg[red]%}${(l:$COLUMNS:: :)?}%{$reset_color%}"
+  if ! [[ "$LAST_EXIT_CODE" =~ '^.* 0.*$' ]]; then
+    echo "$LAST_EXIT_CODE"
+  fi
+}
+
 ssh_host() {
   if [[ -z "$SSH_CLIENT" ]]
   then
@@ -88,12 +95,4 @@ directory_name() {
   echo "%{$fg_bold[cyan]%}%1/%\/%{$reset_color%}"
 }
 
-export PROMPT=$'\n$(ssh_host)$(py_prompt)in $(directory_name) $(git_dirty)$(need_push)\n› '
-set_prompt () {
-  export RPROMPT="%{$fg_bold[cyan]%}%{$reset_color%}"
-}
-
-precmd() {
-  title "zsh" "%m" "%55<...<%~"
-  set_prompt
-}
+export PROMPT=$'$(last_exit_code)\n$(ssh_host)$(py_prompt)in $(directory_name) $(git_dirty)$(need_push)\n› '
