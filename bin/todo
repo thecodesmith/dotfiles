@@ -2,7 +2,7 @@
 
 set -e
 
-TODOS=~/.todo
+TODOS=~/.todo.md
 
 if ! [ -f $TODOS ]
 then
