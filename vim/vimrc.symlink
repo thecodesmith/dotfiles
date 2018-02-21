@@ -26,32 +26,34 @@ call vundle#begin()
 """ Put Vundle plugins here {{{
 Plugin 'gmarik/Vundle.vim'
 
-Plugin 'thecodesmith/vim-colorscheme-codesmith'
-Plugin 'tpope/vim-commentary'
-Plugin 'tpope/vim-abolish'
-Plugin 'tpope/vim-ragtag'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-fugitive'
-Plugin 'godlygeek/tabular'
-Plugin 'terryma/vim-multiple-cursors'
-Plugin 'Raimondi/delimitMate'
-Plugin 'edsono/vim-matchit'
-Plugin 'vim-scripts/taglist.vim'
-Plugin 'scrooloose/nerdtree'
-Plugin 'Xuyuanp/nerdtree-git-plugin'
-Plugin 'kien/ctrlp.vim'
-Plugin 'dkprice/vim-easygrep'
-Plugin 'msanders/snipmate.vim'
-Plugin 'rstacruz/sparkup'
-Plugin 'airblade/vim-rooter' " Automatically change to root directory of project
-Plugin 'christoomey/vim-tmux-navigator'
-Plugin 'editorconfig/editorconfig-vim'
+Plugin 'thecodesmith/vim-colorscheme-codesmith' " my custom darcula-like colorscheme
+Plugin 'tpope/vim-commentary'                   " comments for different filetypes
+Plugin 'tpope/vim-abolish'                      " auto-correct custom words, coerce to snake-case, etc
+Plugin 'tpope/vim-ragtag'                       " adds closing tags for tag-based languages (html, xml, erb)
+Plugin 'tpope/vim-surround'                     " change surrounding elements (quotes, parens, etc.)
+Plugin 'tpope/vim-repeat'                       " allow . to repeat more actions
+Plugin 'tpope/vim-fugitive'                     " TODO: learn to use this more. git wrapper
+Plugin 'tpope/vim-cucumber'
+Plugin 'godlygeek/tabular'                      " quickly align elements
+Plugin 'terryma/vim-multiple-cursors'           " ...
+Plugin 'Raimondi/delimitMate'                   " TODO: replace this with a better one. inserts matching quotes, brackets, etc.
+Plugin 'vim-scripts/taglist.vim'                " TODO: learn to use this. shows file structure (functions, etc) in a split window
+Plugin 'scrooloose/nerdtree'                    " file tree browser
+Plugin 'Xuyuanp/nerdtree-git-plugin'            " show git status in nerdtree
+Plugin 'kien/ctrlp.vim'                         " file path fuzzy search
+Plugin 'dkprice/vim-easygrep'                   " TODO: learn to use this
+Plugin 'msanders/snipmate.vim'                  " snippets
+Plugin 'rstacruz/sparkup'                       " HTML shorthand support
+Plugin 'airblade/vim-rooter'                    " Automatically change to root directory of project
+Plugin 'christoomey/vim-tmux-navigator'         " Navigate between tmux panes and vim splits
+Plugin 'editorconfig/editorconfig-vim'          " Support for .editorconfig files
+Plugin 'chrisbra/vim-autoread'
 
 " Language support
 " Plugin 'tpope/vim-fireplace'
 " Plugin 'tpope/vim-classpath'
 Plugin 'kchmck/vim-coffee-script'
+Plugin 'pangloss/vim-javascript'
 Plugin 'chase/vim-ansible-yaml'
 Plugin 'thecodesmith/vim-groovy'
 Plugin 'PProvost/vim-ps1'
@@ -104,8 +106,10 @@ set noerrorbells    " don't beep
 
 set hidden          " hide buffers instead of closing them
 set nobackup        " don't write a backup file
+set noswapfile      " don't write a swap file
 
 set tags=tags;      " Set the tags file
+
 
 " Save some keystrokes
 nnoremap ; :
@@ -220,15 +224,14 @@ endfunction
 " Strip trailing whitespace automatically on file save
 autocmd BufWritePre * :call <SID>StripTrailingWhitespace()
 
-" This was not working on linux
-"set clipboard=unnamed
+" Toggle paste insert mode
 set pastetoggle=<F8>
-
-" F9 opens markdown files in Chrome
-autocmd BufEnter *.md exe 'noremap <F9> :!chrome %:p<CR>'
 
 " Highlight column 80 in Python files
 autocmd BufEnter *.py exe 'set colorcolumn=80'
+
+" Fix crontab
+autocmd filetype crontab setlocal nobackup nowritebackup
 
 " Ctrl-b switches to previously open buffer
 nnoremap <C-b> :b#<CR>
@@ -248,16 +251,6 @@ au FocusLost * :wa
 
 " Format XML
 map @@x !%xmllint --format -<CR>
-
-" autocmd FileType vue call SetIndent(2)
-" autocmd FileType html call SetIndent(2)
-
-" function! SetIndent(width)
-"   echo "setting width " . width
-"   set tabstop = a:width
-"   set shiftwidth = a:width
-"   set softtabstop = a:width
-" endfunction
 
 " Open file under cursor
 noremap <C-i> :call OpenVariableUnderCursor(expand("<cword>"))<CR>
