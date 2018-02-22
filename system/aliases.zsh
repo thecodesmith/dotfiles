@@ -19,7 +19,7 @@ then
   alias bigs='du -hs * | gsort -hr'
 fi
 
-alias json='python -m json.tool'
+alias json='python3 -m json.tool'
 alias js=json
 alias x=xargs
 alias bash='PS1="in $(pwd) › " bash'
