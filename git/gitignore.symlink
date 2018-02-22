@@ -3,3 +3,5 @@
 *.swp
 *.swo
 .java-version
+venv
+.venv
