@@ -33,6 +33,8 @@ bind h select-pane -L
 bind j select-pane -D
 bind k select-pane -U
 bind l select-pane -R
+bind n next-window
+bind b previous-window
 bind -r C-h select-window -t :-
 bind -r C-l select-window -t :+
 
