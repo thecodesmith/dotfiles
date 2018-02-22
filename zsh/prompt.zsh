@@ -13,6 +13,7 @@ last_exit_code() {
   local LAST_EXIT_CODE="%{$fg[red]%}${(l:$COLUMNS:: :)?}%{$reset_color%}"
   if ! [[ "$LAST_EXIT_CODE" =~ '^.* 0.*$' ]]; then
     echo "$LAST_EXIT_CODE"
+    export LAST_EXIT_CODE
   fi
 }
 
@@ -95,4 +96,9 @@ directory_name() {
   echo "%{$fg_bold[cyan]%}%1/%\/%{$reset_color%}"
 }
 
-export PROMPT=$'$(last_exit_code)\n$(ssh_host)$(py_prompt)in $(directory_name) $(git_dirty)$(need_push)\n› '
+error_aware_caret() {
+  echo "%(?.›.%{$fg[red]%}›%{$reset_color%})"
+}
+
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+export PROMPT=$'\n$(ssh_host)$(py_prompt)in $(directory_name) $(git_dirty)$(need_push)\n$(error_aware_caret) '
