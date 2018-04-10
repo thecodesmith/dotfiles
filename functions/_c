@@ -1,6 +1,7 @@
 #compdef c
 _files -W $PROJECTS -/
-_files -W $PROJECTS/jamf/stash -/
-_files -W $GOPATH/src/github.com -/
+_files -W $PROJECTS/jamf -/
+_files -W $PROJECTS/jamf/brian.stewart -/
+_files -W $GOPATH/src/jamf.com -/
 
 # See further documentation in `functions/c`.

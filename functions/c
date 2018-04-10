@@ -18,9 +18,9 @@
 # your Go projects in $GOPATH/src.
 
 if [ ! -z "$1" ] && [ -s "$GOPATH/src/github.com/$1" ]; then
-  cd "$GOPATH/src/github.com/$1"
-elif [ ! -z "$1" ] && [ -s "$PROJECTS/jamf/stash/$1" ]; then
-  cd "$PROJECTS/jamf/stash/$1"
+  pushd "$GOPATH/src/github.com/$1"
+elif [ ! -z "$1" ] && [ -s "$PROJECTS/jamf/$1" ]; then
+  pushd "$PROJECTS/jamf/$1"
 else
-  cd "$PROJECTS/$1"
+  pushd "$PROJECTS/$1"
 fi
