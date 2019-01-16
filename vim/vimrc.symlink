@@ -48,16 +48,13 @@ Plugin 'airblade/vim-rooter'                    " Automatically change to root d
 Plugin 'christoomey/vim-tmux-navigator'         " Navigate between tmux panes and vim splits
 Plugin 'editorconfig/editorconfig-vim'          " Support for .editorconfig files
 Plugin 'chrisbra/vim-autoread'
+Plugin 'powerman/vim-plugin-AnsiEsc'            " Use :AnsiEsc to enable colorized text
 
 " Language support
+Plugin 'sheerun/vim-polyglot'
+Plugin 'thecodesmith/vim-groovy'
 " Plugin 'tpope/vim-fireplace'
 " Plugin 'tpope/vim-classpath'
-Plugin 'kchmck/vim-coffee-script'
-Plugin 'pangloss/vim-javascript'
-Plugin 'chase/vim-ansible-yaml'
-Plugin 'thecodesmith/vim-groovy'
-Plugin 'PProvost/vim-ps1'
-Plugin 'fatih/vim-go'
 " TODO: This vim-gradle plugin is good, but should be changed to use the same syntax
 " highlighting as the vim-groovy plugin.
 " Plugin 'vim-scripts/vim-gradle' " Add gradle compiler for vim, groovy syntax highlighting in gradle files
@@ -110,6 +107,9 @@ set noswapfile      " don't write a swap file
 
 set tags=tags;      " Set the tags file
 
+" Allow using jk/kj instead of <esc>
+inoremap jk <Esc>
+inoremap kj <Esc>
 
 " Save some keystrokes
 nnoremap ; :
@@ -125,6 +125,9 @@ nnoremap / /\v
 vnoremap / /\v
 
 """ Plugin-specific configurations {{{
+
+" Polyglot
+let g:polyglot_disabled = ['groovy', 'jenkins']
 
 " CtrlP
 let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
@@ -221,6 +224,10 @@ function! <SID>StripTrailingWhitespace()
   call cursor(l, c)
 endfunction
 
+" Fix syntax highlighting problems with Gradle and Jenkins files
+autocmd BufEnter Jenkinsfile,build.gradle :syntax sync fromstart
+autocmd BufEnter Jenkinsfile,build.gradle :set ft=groovy
+
 " Strip trailing whitespace automatically on file save
 autocmd BufWritePre * :call <SID>StripTrailingWhitespace()
 
@@ -228,7 +235,11 @@ autocmd BufWritePre * :call <SID>StripTrailingWhitespace()
 set pastetoggle=<F8>
 
 " Highlight column 80 in Python files
-autocmd BufEnter *.py exe 'set colorcolumn=80'
+augroup python
+  " clear augroup when reloading vimrc
+  autocmd!
+  autocmd FileType python set colorcolumn=80
+augroup END
 
 " Fix crontab
 autocmd filetype crontab setlocal nobackup nowritebackup
@@ -251,6 +262,9 @@ au FocusLost * :wa
 
 " Format XML
 map @@x !%xmllint --format -<CR>
+
+" Format JSON
+map @@j :%!python3 -m json.tool<CR>
 
 " Open file under cursor
 noremap <C-i> :call OpenVariableUnderCursor(expand("<cword>"))<CR>
@@ -276,3 +290,11 @@ endfunction
 function! FindSubClasses(filename)
   execute ":Grep (implements|extends) " . a:filename
 endfunction
+
+nmap <C-S-H> :call <SID>SynStack()<CR>
+function! <SID>SynStack()
+  if !exists("*synstack")
+    return
+  endif
+  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
