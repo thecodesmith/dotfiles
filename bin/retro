@@ -1,0 +1,20 @@
+#!/bin/sh
+
+set -e
+
+TODOS=~/.retro.md
+
+if ! [ -f $TODOS ]
+then
+    touch $TODOS
+fi
+
+if [ "$#" -eq "0" ]
+then
+    cat $TODOS
+elif [ "$#" -eq "1" ] && [ "$1" == "e" ]
+then
+    vim $TODOS
+else
+    echo $* >> $TODOS
+fi

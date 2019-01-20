@@ -20,8 +20,9 @@ groupId = parts[0]
 artifactId = parts[1]
 
 version = parts.size() > 2 ?  parts[2] : 'LATEST'
+classifier = parts.size() > 3 ? parts[3..-1].join(':') : null
 
-cmd = "mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get -Dartifact=$groupId:$artifactId:$version"
+cmd = "mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get -Dartifact=$groupId:$artifactId:$version${classifier ? ":$classifier" : ''}"
 println cmd
 
 p = cmd.execute()
