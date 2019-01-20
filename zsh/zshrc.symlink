@@ -50,3 +50,6 @@ do
 done
 
 unset config_files
+unsetopt nomatch
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

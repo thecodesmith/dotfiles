@@ -8,7 +8,7 @@ then
   alias ll='ls -al --color=auto'
 fi
 
-alias reload!='. ~/.zshrc'
+alias reload!='. ~/.zshrc && tmux source-file ~/.tmux.conf'
 
 alias ..='cd ..'
 alias ...='cd ../..'
