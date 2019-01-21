@@ -42,3 +42,7 @@ alias exi=exit
 alias :q=exit
 alias :qa=close_all_panes
 alias :wq=exit
+
+# metro transit
+alias metro="open ~/.metro-transit/routes/535.pdf"
+alias bus="open ~/.metro-transit/routes/535.pdf"

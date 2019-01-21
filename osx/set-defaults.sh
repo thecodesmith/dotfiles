@@ -36,3 +36,6 @@ defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
 
 # Disable Photos.app opening every time a device connects
 defaults write com.apple.ImageCapture disableHotPlug -bool true
+
+# Disable Bonjour mDNS service advertising
+defaults write /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements -bool YES
