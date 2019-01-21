@@ -224,6 +224,9 @@ function! <SID>StripTrailingWhitespace()
   call cursor(l, c)
 endfunction
 
+" Autoload .vimrc changes
+autocmd! BufWritePost .vimrc source %
+
 " Fix syntax highlighting problems with Gradle and Jenkins files
 autocmd BufEnter Jenkinsfile,build.gradle :syntax sync fromstart
 autocmd BufEnter Jenkinsfile,build.gradle :set ft=groovy
@@ -250,12 +253,6 @@ nnoremap <C-b> :b#<CR>
 " Don't lose selection after indent
 vnoremap < <gv
 vnoremap > >gv
-
-" Easier window navigation
-noremap <C-h> <C-w>h
-noremap <C-j> <C-w>j
-noremap <C-k> <C-w>k
-noremap <C-l> <C-w>l
 
 " Save all buffers when vim loses focus
 au FocusLost * :wa
@@ -291,7 +288,8 @@ function! FindSubClasses(filename)
   execute ":Grep (implements|extends) " . a:filename
 endfunction
 
-nmap <C-S-H> :call <SID>SynStack()<CR>
+" Enable this line to provide syntax element identification
+" nmap <C-S-H> :call <SID>SynStack()<CR>
 function! <SID>SynStack()
   if !exists("*synstack")
     return
