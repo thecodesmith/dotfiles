@@ -46,6 +46,7 @@ Plugin 'msanders/snipmate.vim'                  " snippets
 Plugin 'rstacruz/sparkup'                       " HTML shorthand support
 Plugin 'airblade/vim-rooter'                    " Automatically change to root directory of project
 Plugin 'christoomey/vim-tmux-navigator'         " Navigate between tmux panes and vim splits
+Plugin 'christoomey/vim-conflicted'
 Plugin 'editorconfig/editorconfig-vim'          " Support for .editorconfig files
 Plugin 'chrisbra/vim-autoread'
 Plugin 'powerman/vim-plugin-AnsiEsc'            " Use :AnsiEsc to enable colorized text
@@ -228,8 +229,8 @@ endfunction
 autocmd! BufWritePost .vimrc source %
 
 " Fix syntax highlighting problems with Gradle and Jenkins files
-autocmd BufEnter Jenkinsfile,build.gradle :syntax sync fromstart
 autocmd BufEnter Jenkinsfile,build.gradle :set ft=groovy
+autocmd BufEnter Jenkinsfile,build.gradle :syntax sync fromstart
 
 " Strip trailing whitespace automatically on file save
 autocmd BufWritePre * :call <SID>StripTrailingWhitespace()
