@@ -100,5 +100,5 @@ error_aware_caret() {
   echo "%(?.›.%{$fg[red]%}›%{$reset_color%})"
 }
 
-export VIRTUAL_ENV_DISABLE_PROMPT=1
-export PROMPT=$'\n$(ssh_host)$(py_prompt)in $(directory_name) $(git_dirty)$(need_push)\n$(error_aware_caret) '
+# export VIRTUAL_ENV_DISABLE_PROMPT=1
+# export PROMPT=$'\nin $(directory_name) $(git_dirty)$(need_push)\n$(error_aware_caret) '
