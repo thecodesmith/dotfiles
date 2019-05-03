@@ -4,15 +4,12 @@ export ZSH=$HOME/.dotfiles
 # your project folder that we can `c [tab]` to
 export PROJECTS=~/projects
 
-fpath=($HOME/.dotfiles/zsh-clean-prompt $fpath)
-
 source $HOME/.zsh/antigen.zsh
-
 antigen bundle BrandonRoehl/zsh-clean
 antigen apply
 
+fpath=($HOME/.dotfiles/zsh-clean-prompt $fpath)
 prompt codesmith
-zstyle ':clean:normal:*' prompt-symbol '›'
 
 # Stash your environment variables in ~/.localrc. This means they'll stay out
 # of your main dotfiles repository (which may be public, like this one), but
