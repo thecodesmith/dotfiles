@@ -350,15 +350,21 @@
 	<key>NSWindow Frame Preferences</key>
 	<string>420 168 924 485 0 0 1440 877 </string>
 	<key>NSWindow Frame SUUpdateAlert</key>
-	<string>410 363 620 392 0 0 1440 877 </string>
+	<string>-1270 318 620 392 -1920 -180 1920 1057 </string>
+	<key>NSWindow Frame SessionsPreferences</key>
+	<string>269 126 606 469 0 0 1440 877 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>322 302 770 429 0 0 1440 877 </string>
+	<string>-1358 219 958 470 -1920 -180 1920 1057 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>0 0 1440 877 0 0 1440 877 </string>
+	<string>-1920 -180 1920 1057 -1920 -180 1920 1057 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
-	<string>0 0 1440 877 0 0 1440 877 </string>
+	<string>-1920 1 970 876 -1920 -180 1920 1057 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
-	<string>-970 -151 970 877 -1920 -180 1920 1057 </string>
+	<string>-970 -151 970 876 -1920 -180 1920 1057 </string>
+	<key>NeverWarnAboutShortLivedSessions_65651EBB-BF48-4FFA-9210-D929D960B232</key>
+	<true/>
+	<key>NeverWarnAboutShortLivedSessions_65651EBB-BF48-4FFA-9210-D929D960B232_selection</key>
+	<integer>0</integer>
 	<key>New Bookmarks</key>
 	<array>
 		<dict>
@@ -1850,6 +1856,8 @@
 	<false/>
 	<key>OpenBookmark</key>
 	<false/>
+	<key>OpenNoWindowsAtStartup</key>
+	<false/>
 	<key>OpenTmuxWindowsIn</key>
 	<integer>0</integer>
 	<key>PassOnControlClick</key>
@@ -1910,7 +1918,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2018-08-30T13:34:16Z</date>
+	<date>2019-05-02T16:49:53Z</date>
 	<key>SavePasteHistory</key>
 	<false/>
 	<key>ShowBookmarkName</key>
@@ -1962,7 +1970,7 @@
 	<key>findRegex_iTerm</key>
 	<false/>
 	<key>iTerm Version</key>
-	<string>3.2.0</string>
+	<string>3.2.7</string>
 	<key>kCPFavoritesUserDefaultsKey</key>
 	<array>
 		<data>
