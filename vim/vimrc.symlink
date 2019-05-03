@@ -1,4 +1,4 @@
-" .vimrc
+" " .vimrc
 
 " vimrc is not vi-compatible
 set nocompatible
@@ -29,7 +29,7 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'thecodesmith/vim-colorscheme-codesmith' " my custom darcula-like colorscheme
 Plugin 'tpope/vim-commentary'                   " comments for different filetypes
 Plugin 'tpope/vim-abolish'                      " auto-correct custom words, coerce to snake-case, etc
-Plugin 'tpope/vim-ragtag'                       " adds closing tags for tag-based languages (html, xml, erb)
+" Plugin 'tpope/vim-ragtag'                       " adds closing tags for tag-based languages (html, xml, erb)
 Plugin 'tpope/vim-surround'                     " change surrounding elements (quotes, parens, etc.)
 Plugin 'tpope/vim-repeat'                       " allow . to repeat more actions
 Plugin 'tpope/vim-fugitive'                     " TODO: learn to use this more. git wrapper
@@ -51,15 +51,15 @@ Plugin 'editorconfig/editorconfig-vim'          " Support for .editorconfig file
 Plugin 'chrisbra/vim-autoread'
 Plugin 'powerman/vim-plugin-AnsiEsc'            " Use :AnsiEsc to enable colorized text
 
-" Language support
-Plugin 'sheerun/vim-polyglot'
+" " Language support
+" Plugin 'sheerun/vim-polyglot'
 Plugin 'thecodesmith/vim-groovy'
-" Plugin 'tpope/vim-fireplace'
-" Plugin 'tpope/vim-classpath'
-" TODO: This vim-gradle plugin is good, but should be changed to use the same syntax
-" highlighting as the vim-groovy plugin.
-" Plugin 'vim-scripts/vim-gradle' " Add gradle compiler for vim, groovy syntax highlighting in gradle files
-""" }}} End Vundle plugins
+" " Plugin 'tpope/vim-fireplace'
+" " Plugin 'tpope/vim-classpath'
+" " TODO: This vim-gradle plugin is good, but should be changed to use the same syntax
+" " highlighting as the vim-groovy plugin.
+" " Plugin 'vim-scripts/vim-gradle' " Add gradle compiler for vim, groovy syntax highlighting in gradle files
+" """ }}} End Vundle plugins
 
 """ Finalize Vundle
 call vundle#end()
@@ -74,19 +74,21 @@ endif
 " Finished setting up Vundle
 
 syntax enable
-filetype plugin indent on
+filetype on
+filetype plugin on
+filetype indent on
 
 set term=screen-256color
 set guifont=Lucida\ Console
 colorscheme codesmith
 
-set tabstop=4       " tab is 4 spaces
-set shiftwidth=4    " number of spaces for autoindenting
+set tabstop=4
+set shiftwidth=4
 set softtabstop=4
 set expandtab
-set autoindent      " always set autoindenting on
-set copyindent      " copy the previous indentation on autoindenting
-set nowrap          " don't wrap lines
+set autoindent
+set copyindent
+set nowrap
 set backspace=indent,eol,start
 
 set number          " show line numbers
@@ -128,7 +130,7 @@ vnoremap / /\v
 """ Plugin-specific configurations {{{
 
 " Polyglot
-let g:polyglot_disabled = ['groovy', 'jenkins']
+let g:polyglot_disabled = ['groovy', 'jenkins', 'markdown']
 
 " CtrlP
 let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
@@ -228,6 +230,10 @@ endfunction
 " Autoload .vimrc changes
 autocmd! BufWritePost .vimrc source %
 
+" Fix indent issues in (x|ht)ml files
+autocmd BufEnter *.xml  :filetype indent off
+autocmd BufEnter *.html :filetype indent off
+
 " Fix syntax highlighting problems with Gradle and Jenkins files
 autocmd BufEnter Jenkinsfile,build.gradle :set ft=groovy
 autocmd BufEnter Jenkinsfile,build.gradle :syntax sync fromstart
@@ -290,10 +296,17 @@ function! FindSubClasses(filename)
 endfunction
 
 " Enable this line to provide syntax element identification
-" nmap <C-S-H> :call <SID>SynStack()<CR>
+nmap <C-i> :call <SID>SynStack()<CR>
 function! <SID>SynStack()
   if !exists("*synstack")
     return
   endif
   echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 endfunc
+
+" vimdiff mappings
+if &diff
+  map <leader>1 :diffget LOCAL<CR>
+  map <leader>2 :diffget BASE<CR>
+  map <leader>3 :diffget REMOTE<CR>
+endif
