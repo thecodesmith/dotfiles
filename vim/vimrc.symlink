@@ -34,6 +34,7 @@ Plugin 'tpope/vim-surround'                     " change surrounding elements (q
 Plugin 'tpope/vim-repeat'                       " allow . to repeat more actions
 Plugin 'tpope/vim-fugitive'                     " TODO: learn to use this more. git wrapper
 Plugin 'tpope/vim-cucumber'
+Plugin 'tpope/vim-obsession'                    " enable vim sessions
 Plugin 'godlygeek/tabular'                      " quickly align elements
 Plugin 'terryma/vim-multiple-cursors'           " ...
 Plugin 'Raimondi/delimitMate'                   " TODO: replace this with a better one. inserts matching quotes, brackets, etc.

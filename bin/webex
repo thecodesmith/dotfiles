@@ -24,10 +24,7 @@ case "$username" in
     help | --help | -h)
         echo "$HELP_TEXT"       ;;
     '')     webex $my_username  ;;
-    zach)   webex zach.halmstad ;;
-    david)  webex david.brazeau ;;
-    grant)  webex grant.wuerker ;;
-    doug)   webex doug.rhoten   ;;
-    justin) webex justin.sako   ;;
-    *) webex "$username" ;;
+    tom)    webex tom.wile      ;;
+    brian)  webex brian.kelley  ;;
+    *)      webex "$username"   ;;
 esac
