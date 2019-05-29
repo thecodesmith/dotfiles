@@ -27,6 +27,11 @@ brew install gist
 brew install nmap
 brew install tmux
 brew install vim
+brew install jq
+brew install yq
+
+brew tap jmespath/jmespath
+brew install jp
 
 # UNIX tools
 brew install findutils --default-names

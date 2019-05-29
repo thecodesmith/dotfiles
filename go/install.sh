@@ -9,11 +9,4 @@ export GOROOT=$GOROOT
 export PATH=$GOPATH/bin:$PATH
 export PATH=$GOROOT/bin:$PATH
 
-brew update
-brew install go
-brew install git
-brew install hg
-brew install bzr
-
-go get golang.org/x/tools/cmd/godoc
-go get golang.org/x/tools/cmd/vet
+brew install golang
