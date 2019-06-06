@@ -24,6 +24,7 @@ brew cask install jetbrains-toolbox
 
 # Install homebrew packages
 brew install bash-completion
+brew install python
 brew install git
 brew install gpg
 brew install grc

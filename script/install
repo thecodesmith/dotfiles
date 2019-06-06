@@ -6,10 +6,17 @@ set -e
 
 cd "$(dirname $0)"/..
 
-# install ssh first so keys and config are available
+# install homebrew first so tools are available
+if [ -f homebrew/install.sh ]; then
+    bash -c homebrew/install.sh
+fi
+
+# install ssh next so keys and config are available
 if [ -f ssh/install.sh ]; then
     bash -c ssh/install.sh
 fi
 
 # find the installers and run them iteratively
-find . -name install.sh | while read installer ; do bash -c "${installer}" ; done
+find . -name install.sh | grep -v homebrew | grep -v ssh | while read installer ; do
+    bash -c "${installer}"
+done
