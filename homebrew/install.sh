@@ -16,8 +16,14 @@ then
   ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 fi
 
-# Install homebrew packages
+# Install homebrew casks
 brew install caskroom/cask/brew-cask
+brew cask install iterm2
+brew cask install atom
+brew cask install jetbrains-toolbox
+
+# Install homebrew packages
+brew install bash-completion
 brew install git
 brew install gpg
 brew install grc
