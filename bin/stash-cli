@@ -1,0 +1,86 @@
+#!/usr/bin/env ruby
+
+require 'json'
+require 'rest-client'
+
+BITBUCKET_URL = 'https://stash.jamf.build/rest/api/1.0'
+PROJECT_CACHE_FILE = '/Users/brian/.stash/data/projects.json'
+
+$token = File.read("/Users/brian/.stash/token")
+
+def get_projects
+    if not File.file? PROJECT_CACHE_FILE
+        File.open(PROJECT_CACHE_FILE, 'w') do |f|
+            block = proc { |response|
+                response.read_body do |chunk|
+                    f.write chunk
+                end
+            }
+            RestClient::Request.execute(method: :get,
+                                        url: "#{BITBUCKET_URL}/projects?limit=1000",
+                                        headers: {:Authorization => "Bearer #{$token}"},
+                                        block_response: block)
+        end
+    end
+
+    f = File.read PROJECT_CACHE_FILE
+    data = JSON.parse f
+
+    key_width = field_width data['values'], 'key'
+    name_width = field_width data['values'], 'name'
+
+    data['values'].sort_by {|v| v['name'].downcase }.each do |v|
+        puts "#{v['key'].ljust(key_width)}  #{v['name'].ljust(name_width)}  #{v['description']}"
+    end
+end
+
+def get_repositories(project)
+    response = RestClient.get "#{BITBUCKET_URL}/projects/#{project}/repos?limit=1000", {:Authorization => "Bearer #{$token}"}
+    data = JSON.parse(response)
+
+    slug_width = field_width data['values'], 'slug'
+
+    data['values'].sort_by {|v| v['name'].downcase }.each do |v|
+        puts v['slug'].ljust(slug_width)
+    end
+end
+
+def field_width(array, key)
+    array.map {|v| v[key].length }.max
+end
+
+$user_flags = []
+
+def parse_args(args)
+  options = {
+    :verb => args[0],
+    :thing => args[1],
+    :thing2 => args[2]
+  }
+
+  flags = []
+
+  if args.include?('-q') or args.include?('--quiet')
+    flags << '--quiet'
+  end
+
+  $user_flags = flags
+
+  options
+end
+
+def run()
+    command = parse_args ARGV
+    verb = command[:verb]
+    thing = command[:thing]
+
+    if verb == "get"
+        get_projects if thing == "projects"
+        if thing == "repositories"
+            (puts "Error: please specify a project" and return) if command[:thing2].nil?
+            get_repositories(command[:thing2])
+        end
+    end
+end
+
+run
