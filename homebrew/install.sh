@@ -42,9 +42,8 @@ brew install findutils \
              gnu-tar \
              gnu-which \
              gnutls  \
-             grep --default-names
-
-brew install coreutils \
+             grep \
+             coreutils \
              binutils \
              diffutils \
              gzip \
