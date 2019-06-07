@@ -13,7 +13,6 @@ then
 fi
 
 # Install homebrew casks
-brew install caskroom/cask/brew-cask
 brew cask install iterm2 \
                   atom \
                   jetbrains-toolbox

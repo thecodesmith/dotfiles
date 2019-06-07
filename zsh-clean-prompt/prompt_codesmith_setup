@@ -43,13 +43,13 @@ prompt_codesmith_setup() {
         ps1=(
             $prompt_newline # Initial newline, for spaciousness.
             $prompt_username
-            '%F{248}in %F{45}%B%6v%f%b' # Path
-            '%(1V. %F{248}on %B%F{%(2V.red.green)}%1v%b%F{yellow}%(3V. %3v.)%f.)' # VCS status
+            '%F{248}in %F{45}%B%5v%f%b' # Path
+            '%(1V. %F{244}on %B%F{%(2V.red.green)}%1v%b%F{yellow}%(3V. %3v.)%f.)' # VCS status
             '%(4V. %F{215}%4v%f.)' # Execution time
             $prompt_newline # Separate preprompt and prompt.
             "%F{%(?.white.red)}%(!.$root_prompt_sym.$prompt_sym)%f " # Prompt symbol
         )
-        PS2="%F{248}%_ %F{white}%(!.#.$prompt_sym)%f "
+        PS2="%F{244}%_ %F{white}%(!.#.$prompt_sym)%f "
     else
         ps1=(
             $prompt_newline # Initial newline, for spaciousness.
