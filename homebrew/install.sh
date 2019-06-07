@@ -20,6 +20,7 @@ brew cask install iterm2 \
 # Install homebrew packages
 brew install bash-completion \
              python \
+             the_silver_searcher \
              git \
              gpg \
              grc \
