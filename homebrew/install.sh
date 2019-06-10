@@ -21,6 +21,7 @@ brew cask install iterm2 \
 brew install bash-completion \
              python \
              the_silver_searcher \
+             tree \
              git \
              gpg \
              grc \
@@ -34,7 +35,7 @@ brew install bash-completion \
              yq
 
 brew tap jmespath/jmespath
-brew install jp
+brew install jmespath/jmespath/jp
 
 # UNIX tools
 brew install findutils \
