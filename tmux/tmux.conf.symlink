@@ -68,7 +68,7 @@ set -g default-terminal "screen-256color"
 set -g status-style fg=white,bg=colour235
 
 # Window list
-setw -g window-status-style fg=cyan,bg=default,dim
+setw -g window-status-style fg=cyan,bg=default
 
 # Pane borders
 set -g pane-border-style fg=colour236,bg=colour236
@@ -79,10 +79,11 @@ set -g message-style fg=white,bg=colour235,bright
 
 # Status bar left
 set -g status-left-length 40
-set -g status-left "#[fg=colour240]Session: #S  #[fg=yellow]#I  #[fg=cyan]#P"
+set -g status-left "#[fg=colour244]Session: #S  #I:#P  "
 
 # Status bar right
-set -g status-right "#[fg=colour240]%b %d %H:%M"
+set -g status-right-length 50
+set -g status-right "#($HOME/.tmux/plugins/kube-tmux/kube.tmux 244 244 cyan)  #[fg=colour244]|  %b %d %H:%M"
 
 ## Text and Buffers
 
@@ -110,6 +111,7 @@ bind-key -T copy-mode-vi C-k send -X page-up
 # Install tmux plugins
 set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'thecodesmith/kube-tmux'
 set -g @resurrect-strategy-vim 'session'
 
 # Initialize tmux plugin manager (keep this line at the very bottom of tmux.conf)
