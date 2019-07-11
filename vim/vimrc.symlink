@@ -135,6 +135,7 @@ let g:polyglot_disabled = ['groovy', 'jenkins', 'markdown']
 
 " CtrlP
 let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
+let g:ctrlp_clear_cache_on_exit = 0
 
 " The Silver Searcher
 if executable('ag')
