@@ -1,25 +1,20 @@
 #!/usr/bin/env ruby
 
 require 'json'
-require 'rest-client'
+require 'http'
 
 BITBUCKET_URL = 'https://stash.jamf.build/rest/api/1.0'
 PROJECT_CACHE_FILE = '/Users/brian/.stash/data/projects.json'
 
 $token = File.read("/Users/brian/.stash/token")
+$http = HTTP.auth("Bearer #{$token}")
+$user_flags = []
 
 def get_projects
+    response = $http.get("#{BITBUCKET_URL}/projects?limit=1000")
     if not File.file? PROJECT_CACHE_FILE
         File.open(PROJECT_CACHE_FILE, 'w') do |f|
-            block = proc { |response|
-                response.read_body do |chunk|
-                    f.write chunk
-                end
-            }
-            RestClient::Request.execute(method: :get,
-                                        url: "#{BITBUCKET_URL}/projects?limit=1000",
-                                        headers: {:Authorization => "Bearer #{$token}"},
-                                        block_response: block)
+            f.write response.to_s
         end
     end
 
@@ -35,8 +30,8 @@ def get_projects
 end
 
 def get_repositories(project)
-    response = RestClient.get "#{BITBUCKET_URL}/projects/#{project}/repos?limit=1000", {:Authorization => "Bearer #{$token}"}
-    data = JSON.parse(response)
+    response = $http.get "#{BITBUCKET_URL}/projects/#{project}/repos?limit=1000"
+    data = JSON.parse(response.to_s)
 
     slug_width = field_width data['values'], 'slug'
 
@@ -49,7 +44,16 @@ def field_width(array, key)
     array.map {|v| v[key].length }.max
 end
 
-$user_flags = []
+def create_repo(project, repo)
+    response = $http.post "#{BITBUCKET_URL}/projects/#{project}/repos",
+                          :json => { :name => repo }
+    if not response.status.success?
+        puts "Error [#{response.code}]: #{response.to_s}"
+        exit 1
+    else
+        puts "Repo created at https://stash.jamf.build/projects/#{project}/repos/#{repo}"
+    end
+end
 
 def parse_args(args)
   options = {
@@ -64,6 +68,10 @@ def parse_args(args)
     flags << '--quiet'
   end
 
+  if args.include?('-h') or args.include?('--help')
+    flags << '--help'
+  end
+
   $user_flags = flags
 
   options
@@ -73,6 +81,16 @@ def run()
     command = parse_args ARGV
     verb = command[:verb]
     thing = command[:thing]
+    thing2 = command[:thing2]
+
+    if $user_flags.include? '--help'
+      puts %q(
+Available Commands:
+  get [projects|repositories]
+  create [project] [repo]
+)
+      return
+    end
 
     if verb == "get"
         get_projects if thing == "projects"
@@ -80,6 +98,11 @@ def run()
             (puts "Error: please specify a project" and return) if command[:thing2].nil?
             get_repositories(command[:thing2])
         end
+    elsif verb == "create"
+      usage = "Usage:\n  stash-cli create [project] [repo]"
+      abort "Error: No project specified\n#{usage}" if thing.nil?
+      abort "Error: No repo specified\n#{usage}" if thing2.nil?
+      create_repo thing, thing2
     end
 end
 
