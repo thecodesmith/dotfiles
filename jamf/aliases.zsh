@@ -1,5 +1,7 @@
 alias vpn=jamf-vpn
-alias jp='pushd ~/Projects/jamf-pro/jamf-pro-server'
+alias jp='pushd ~/Projects/jamf/jamf-pro/jamf-pro-server'
+alias eks='kubectx eks'
+alias stash='stash-cli'
 
 function switch_jdk() {
     local wanted_java_version=$1
@@ -14,4 +16,9 @@ function switch_jdk() {
     echo "Java now using : "
     java -version
     clear
+}
+
+fleet-evict() {
+    kubectx fleet
+    kubectl delete po -n fleet $(kubectl get po -n fleet | grep -i evict | awk '{print $1}')
 }
