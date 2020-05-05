@@ -32,9 +32,11 @@ sed "s/ Running / $(green 'Running') /" |
     sed "s/ Error / $(red 'Error') /" |
     sed "s/ ImagePullBackOff / $(red 'ImagePullBackOff') /" |
     sed "s/ CrashLoopBackOff / $(red 'CrashLoopBackOff') /" |
+    sed "s/ CreateContainerConfigError / $(red 'CreateContainerConfigError') /" |
     sed "s/ Evicted / $(red 'Evicted') /" |
     sed "s/ Completed / $(blue 'Completed') /" |
     sed "s/ Terminating / $(yellow 'Terminating') /" |
     sed "s/ Pending / $(cyan 'Pending') /" |
+    sed "s/ ContainerCreating / $(cyan 'ContainerCreating') /" |
     sed "s/ PodInitializing / $(cyan 'PodInitializing') /" |
     sed "s/ Init:/ $(cyan 'Init:')/"
