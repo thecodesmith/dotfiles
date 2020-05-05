@@ -58,6 +58,7 @@ Plugin 'thecodesmith/vim-groovy'
 Plugin 'udalov/kotlin-vim'
 Plugin 'chr4/nginx.vim'
 Plugin 'Glench/Vim-Jinja2-Syntax'
+Plugin 'milch/vim-fastlane'
 " " Plugin 'tpope/vim-fireplace'
 " " Plugin 'tpope/vim-classpath'
 " " TODO: This vim-gradle plugin is good, but should be changed to use the same syntax
@@ -162,6 +163,11 @@ noremap _ dd<esc>kP
 " Convert current word to uppercase
 inoremap <c-u> <esc>mrviwU`ra
 nnoremap <c-u>      mrviwU`r
+
+" Disable readonly in vimdiff mode
+if &diff
+  set noreadonly
+endif
 
 " ****************************************** "
 
@@ -326,3 +332,10 @@ function! CanonicalizeGradleDependencies()
   let @q="/dependencies\<CR>jvk$%k$:sort<CR>/compile project<CR>O<ESC>€ýazzzt/providedCompile<CR>O<ESC>€ýa/runtime<CR>O<ESC>/runtime project<CR>O<ESC>/testCompile<CR>O<ESC>zt/testcompile project<CR>O<ESC>€ýagg/compile project<CR>dap{{gg/compile <CR>PLzzzt/runtime project<CR>dap/runtime<CR>Pu/runtime <CR>P/testcompile <CR>project<CR>zz/}<CR>O<ESC>€ýagg/testcompile project<CR>dap{/testcompile P/}<CR>k:w<CR>kkkgg/dependencies<CR>;noh<CR>"
   execute '@q'
 endfunc
+
+function! s:syntax_query() abort
+  for id in synstack(line("."), col("."))
+    echo synIDattr(id, "name")
+  endfor
+endfunction
+command! SyntaxQuery call s:syntax_query()
