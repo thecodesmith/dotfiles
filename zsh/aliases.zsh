@@ -1,7 +1,7 @@
 if [[ "$OS" == 'OSX' ]]
 then
   alias ls='ls -G'
-  alias ll='ls -alG'
+  alias ll='ls -alGh'
 elif [[ "$OS" == 'LINUX' ]]
 then
   alias ls='ls --color=auto'
