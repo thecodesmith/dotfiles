@@ -52,6 +52,9 @@ def create_repo(project, repo)
         exit 1
     else
         puts "Repo created at https://stash.jamf.build/projects/#{project}/repos/#{repo}"
+        puts "To add this remote to an existing repo, run this:"
+        puts ""
+        puts "    git remote add origin stash:#{project}/#{repo}"
     end
 end
 
