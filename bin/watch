@@ -1,0 +1,24 @@
+#!/usr/bin/env zsh
+# usage: watch.sh <your_command> <sleep_duration>
+
+# shopt -s expand_aliases
+# source ~/.dotfiles/kube/aliases.zsh
+
+tmpfile="`mktemp`"
+trap "rm -f \"$tmpfile\"" EXIT # Automatically delete temp file on exit
+
+sec=2
+case "$1" in
+  -n) sec="$2"
+      shift 2 ;;
+esac
+
+clear
+date
+while :; do
+  zsh -c "source ~/.dotfiles/kube/aliases.zsh; $1" > "$tmpfile" 2>&1
+  clear
+  date
+  cat "$tmpfile" | head -n $(( $(tput lines) - 1 ))
+  sleep "$sec"
+done

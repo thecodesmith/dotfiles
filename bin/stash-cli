@@ -1,61 +1,224 @@
 #!/usr/bin/env ruby
 
-require 'json'
+require 'cgi'
+require 'colorize'
+require 'git'
 require 'http'
+require 'json'
+require 'logger'
+require 'ostruct'
 
-BITBUCKET_URL = 'https://stash.jamf.build/rest/api/1.0'
-PROJECT_CACHE_FILE = '/Users/brian/.stash/data/projects.json'
+BITBUCKET_URL = "https://stash.jamf.build"
+BITBUCKET_API_URL = "#{BITBUCKET_URL}/rest/api/1.0"
+PROJECT_CACHE_FILE = "/Users/brian/.stash/data/projects.json"
 
 $token = File.read("/Users/brian/.stash/token")
 $http = HTTP.auth("Bearer #{$token}")
 $user_flags = []
 
+module PrettyDate
+  def to_pretty
+    a = (Time.now-self).to_i
+
+    case a
+      when 0               then 'just now'
+      when 1               then 'a second ago'
+      when 2..59           then a.to_s+' seconds ago'
+      when 60..119         then 'a minute ago' #120 = 2 minutes
+      when 120..3540       then (a/60).to_i.to_s+' minutes ago'
+      when 3541..7100      then 'an hour ago' # 3600 = 1 hour
+      when 7101..82800     then ((a+99)/3600).to_i.to_s+' hours ago'
+      when 82801..172000   then 'a day ago' # 86400 = 1 day
+      when 172001..518400  then ((a+800)/(60*60*24)).to_i.to_s+' days ago'
+      when 518400..1036800 then 'a week ago'
+      else ((a+180000)/(60*60*24*7)).to_i.to_s+' weeks ago'
+    end
+  end
+end
+
+Time.send :include, PrettyDate
+
+def show_ci_status
+  commit = git.revparse('HEAD')
+  puts "Commit: #{commit}"
+
+  url = "#{BITBUCKET_URL}/rest/build-status/latest/commits/#{commit}"
+  response = $http.get(url)
+  data = JSON.parse response.to_s
+  puts "Builds: #{data['size']}"
+
+  merge_status = data['values'].all? {|b| b['state'] == 'SUCCESSFUL' } ? '√'.green : 'x'.red
+  puts "Merge Status: #{merge_status}"
+  puts ''
+
+  name_width = field_width data['values'], 'name'
+  time_width = data['values'].map {|b| parse_timestamp(b['dateAdded']).length }.max
+  data['values'].each do |b|
+    time = parse_timestamp(b['dateAdded']).ljust(time_width)
+    puts " #{build_state_icon(b['state'])}  #{b['name'].ljust(name_width)}  #{time}  #{b['url'].blue}"
+  end
+end
+
+def parse_timestamp(t)
+  Time.at(t / 1000).to_pretty
+end
+
+def build_state_icon(text)
+  if text == 'SUCCESSFUL'
+    '√'.green
+  elsif text == 'FAILED'
+    'x'.red
+  else
+    'o'.blue
+  end
+end
+
+def create_pr
+  branch_name = get_current_branch
+  url = get_remote_url
+  repo = parse_remote_url(url)
+  pr_url = "#{BITBUCKET_URL}/projects/#{repo.project}/repos/#{repo.name}/pull-requests?create&sourceBranch=#{branch_name}"
+  puts "Creating PR from #{repo.project}/#{repo.name}/#{branch_name}"
+  puts "  #{pr_url}"
+  exit_code = system "open '#{pr_url}'"
+  if !exit_code
+    puts "Failed to open URL"
+    exit 1
+  end
+end
+
+def open_repo_in_browser
+  branch_name = get_current_branch
+  url = get_remote_url
+  repo = parse_remote_url(url)
+  puts "Opening branch #{repo.project} / #{repo.name} / #{branch_name}"
+  ref = CGI::escape "refs/heads/#{branch_name}"
+  branch_url = "#{BITBUCKET_URL}/projects/#{repo.project}/repos/#{repo.name}/browse?at=#{ref}"
+  puts "  #{branch_url}"
+  exit_code = system "open '#{branch_url}'"
+  if !exit_code
+    puts "Failed to open URL"
+    exit 1
+  end
+end
+
+def find_git_root
+  `git rev-parse --show-toplevel`.chomp
+end
+
+def git
+  root = find_git_root
+  Git.open(root)
+end
+
+def get_remote_url
+  url = git.config 'remote.origin.url'
+  if !url
+    puts "No 'remote.origin.url' present in .git/config"
+    exit 1
+  end
+  url
+end
+
+def get_current_branch
+  git.current_branch
+end
+
+def parse_remote_url(url)
+  if url.start_with?("https")
+    parse_https_url url
+  else
+    parse_ssh_url url
+  end
+end
+
+def parse_https_url(url)
+  details = url.split(BITBUCKET_URL)
+    .last
+    .chomp(".git")
+    .gsub(/^\//, '')
+    .split("/")
+
+  repo = OpenStruct.new
+  repo.project = details.first
+  repo.name = details.last
+  repo
+end
+
+def parse_ssh_url(url)
+  details = url.split(":")
+    .last
+    .chomp(".git")
+    .split("/")
+
+  repo = OpenStruct.new
+  repo.project = details.first
+  repo.name = details.last
+  repo
+end
+
 def get_projects
-    response = $http.get("#{BITBUCKET_URL}/projects?limit=1000")
-    if not File.file? PROJECT_CACHE_FILE
-        File.open(PROJECT_CACHE_FILE, 'w') do |f|
-            f.write response.to_s
-        end
+  response = $http.get("#{BITBUCKET_API_URL}/projects?limit=1000")
+  if not File.file? PROJECT_CACHE_FILE
+    File.open(PROJECT_CACHE_FILE, 'w') do |f|
+      f.write response.to_s
     end
+  end
 
-    f = File.read PROJECT_CACHE_FILE
-    data = JSON.parse f
+  f = File.read PROJECT_CACHE_FILE
+  data = JSON.parse f
 
-    key_width = field_width data['values'], 'key'
-    name_width = field_width data['values'], 'name'
+  key_width = field_width data['values'], 'key'
+  name_width = field_width data['values'], 'name'
 
-    data['values'].sort_by {|v| v['name'].downcase }.each do |v|
-        puts "#{v['key'].ljust(key_width)}  #{v['name'].ljust(name_width)}  #{v['description']}"
-    end
+  data['values'].sort_by {|v| v['name'].downcase }.each do |v|
+    puts "#{v['key'].ljust(key_width)}  #{v['name'].ljust(name_width)}  #{v['description']}"
+  end
 end
 
 def get_repositories(project)
-    response = $http.get "#{BITBUCKET_URL}/projects/#{project}/repos?limit=1000"
-    data = JSON.parse(response.to_s)
+  response = $http.get "#{BITBUCKET_API_URL}/projects/#{project}/repos?limit=1000"
+  JSON.parse(response.to_s)
+end
 
-    slug_width = field_width data['values'], 'slug'
+def print_repositories(project)
+  data = get_repositories(project)
+  slug_width = field_width data['values'], 'slug'
 
-    data['values'].sort_by {|v| v['name'].downcase }.each do |v|
-        puts v['slug'].ljust(slug_width)
-    end
+  data['values'].sort_by {|v| v['name'].downcase }.each do |v|
+    puts v['slug'].ljust(slug_width)
+  end
 end
 
 def field_width(array, key)
-    array.map {|v| v[key].length }.max
+  array.map {|v| v[key].length }.max
 end
 
 def create_repo(project, repo)
-    response = $http.post "#{BITBUCKET_URL}/projects/#{project}/repos",
-                          :json => { :name => repo }
-    if not response.status.success?
-        puts "Error [#{response.code}]: #{response.to_s}"
-        exit 1
+  response = $http.post "#{BITBUCKET_API_URL}/projects/#{project}/repos",
+              :json => { :name => repo }
+  if not response.status.success?
+    puts "Error [#{response.code}]: #{response.to_s}"
+    exit 1
+  else
+    puts "Repo created at https://stash.jamf.build/projects/#{project}/repos/#{repo}"
+    puts "To add this remote to an existing repo, run this:"
+    puts ""
+    puts "  git remote add origin stash:#{project}/#{repo}"
+  end
+end
+
+def sync_project(project)
+  data = get_repositories(project)
+  data['values'].each do |r|
+    if File.directory?(r['name'])
+      puts "Updating repo #{r['name']}"
+      system "cd #{r['name']} && git fetch"
     else
-        puts "Repo created at https://stash.jamf.build/projects/#{project}/repos/#{repo}"
-        puts "To add this remote to an existing repo, run this:"
-        puts ""
-        puts "    git remote add origin stash:#{project}/#{repo}"
+      puts "Cloning repo #{r['name']}"
+      exit_code = system "git clone stash:#{project}/#{r['name']}"
     end
+  end
 end
 
 def parse_args(args)
@@ -81,32 +244,49 @@ def parse_args(args)
 end
 
 def run()
-    command = parse_args ARGV
-    verb = command[:verb]
-    thing = command[:thing]
-    thing2 = command[:thing2]
+  command = parse_args ARGV
+  verb = command[:verb]
+  thing = command[:thing]
+  thing2 = command[:thing2]
 
-    if $user_flags.include? '--help'
-      puts %q(
+  if $user_flags.include? '--help'
+    puts %q(
 Available Commands:
   get [projects|repositories]
   create [project] [repo]
+  browse
+  sync [project]
 )
-      return
-    end
+    return
+  end
 
-    if verb == "get"
-        get_projects if thing == "projects"
-        if thing == "repositories"
-            (puts "Error: please specify a project" and return) if command[:thing2].nil?
-            get_repositories(command[:thing2])
-        end
-    elsif verb == "create"
-      usage = "Usage:\n  stash-cli create [project] [repo]"
-      abort "Error: No project specified\n#{usage}" if thing.nil?
-      abort "Error: No repo specified\n#{usage}" if thing2.nil?
-      create_repo thing, thing2
+  if verb == "get"
+    get_projects if thing == "projects"
+    if thing == "repositories"
+      (puts "Error: please specify a project" and return) if command[:thing2].nil?
+      get_repositories(command[:thing2])
     end
+  elsif verb == "create"
+    usage = "Usage:\n  stash-cli create [project] [repo]"
+    abort "Error: No project specified\n#{usage}" if thing.nil?
+    abort "Error: No repo specified\n#{usage}" if thing2.nil?
+    create_repo thing, thing2
+  elsif verb == "browse"
+    open_repo_in_browser
+  elsif verb == "pr"
+    create_pr
+  elsif verb == "ci"
+    show_ci_status
+  elsif verb == "sync"
+    if command[:thing].nil?
+      puts "Error: please specify a project"
+      exit 1
+    end
+    sync_project command[:thing]
+  else
+    puts "No such command '#{verb}'. Use --help for usage."
+    exit 1
+  end
 end
 
 run

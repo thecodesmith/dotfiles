@@ -51,14 +51,16 @@ Plugin 'christoomey/vim-conflicted'
 Plugin 'editorconfig/editorconfig-vim'          " Support for .editorconfig files
 Plugin 'chrisbra/vim-autoread'
 Plugin 'powerman/vim-plugin-AnsiEsc'            " Use :AnsiEsc to enable colorized text
+" Plugin 'vim-syntastic/syntastic'
 
 " " Language support
 " Plugin 'sheerun/vim-polyglot'
-Plugin 'thecodesmith/vim-groovy'
+" Plugin 'thecodesmith/vim-groovy'
 Plugin 'udalov/kotlin-vim'
 Plugin 'chr4/nginx.vim'
 Plugin 'Glench/Vim-Jinja2-Syntax'
 Plugin 'milch/vim-fastlane'
+Plugin 'rust-lang/rust.vim'
 " " Plugin 'tpope/vim-fireplace'
 " " Plugin 'tpope/vim-classpath'
 " " TODO: This vim-gradle plugin is good, but should be changed to use the same syntax
