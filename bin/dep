@@ -1,50 +1,52 @@
-#!/usr/bin/env groovy
+#!/usr/bin/env zsh
 
-import groovy.io.FileType
-import java.text.NumberFormat
+USAGE="
+A dependency search CLI utilizing search.maven.org
 
-if (!args.size()) {
-    println '''|Usage:
-               |  dep [artifact]'''.stripMargin()
-    System.exit(1)
-}
+Usage:
+  dep [artifact query] [flags]
 
-parts = args[0].tokenize(':')
+Query keywords:
+  g    group
+  a    artifact
+  v    version
+  p    packaging
+  l    classifier
+  c    class name
+  fc   fully qualified class name
+  AND  require all terms
+  OR   optional terms
 
-if (parts.size() < 2) {
-    println "Invalid artifact. Please specify coordinates like groupId:artifactId:version[:packaging][:classifier]."
-    System.exit(1)
-}
+Flags:
+  --count  number of results (default: 20)"
 
-groupId = parts[0]
-artifactId = parts[1]
 
-version = parts.size() > 2 ?  parts[2] : 'LATEST'
-classifier = parts.size() > 3 ? parts[3..-1].join(':') : null
+if [[ "$#" -eq 0 ]]; then
+    echo "$USAGE" && exit 1
+fi
 
-cmd = "mvn org.apache.maven.plugins:maven-dependency-plugin:2.8:get -Dartifact=$groupId:$artifactId:$version${classifier ? ":$classifier" : ''}"
-println cmd
+raw_query="$1"
+query="${1// /%20}"
+count='20'
 
-p = cmd.execute()
-p.waitFor()
+shift
 
-repository = "${System.getProperty('user.home')}/.m2/repository"
-dir = "$repository/${groupId.replaceAll(/\./, '/')}/$artifactId"
+while test $# -gt 0; do
+    case "$1" in
+        -c|--count)  shift; count=$1 ;;
+        -h|--help)   echo "$USAGE" && exit ;;
+        *)
+            echo "Error: invalid option $1"
+            echo "$USAGE"
+            exit 1
+            ;;
+    esac
+    shift
+done
 
-versions = []
-new File(dir).eachFile(FileType.DIRECTORIES) {
-    versions << it
-}
+echo "Searching search.maven.org for '$raw_query'"
+echo "  Browser link: https://search.maven.org/search?q=$query"
+echo
+echo "Artifacts:"
 
-if (version == 'LATEST') {
-    version = versions.findAll {
-        name = it.name.toLowerCase()
-        !name.contains('alpha') && !name.contains('beta') && !name.contains('snapshot')
-    }.max { it.name } .name
-}
-
-jar = new File("$dir/$version/$artifactId-${version}.jar")
-
-println "Directory: $dir"
-println "Version: $version"
-println "Size: ${NumberFormat.integerInstance.format(jar.size())} bytes"
+curl -sSL "https://search.maven.org/solrsearch/select?q=$query&rows=$count&wt=json&core=gav" | jq -r '.response.docs[].id'
