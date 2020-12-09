@@ -45,7 +45,9 @@ while test $# -gt 0; do
 done
 
 echo "Searching search.maven.org for '$raw_query'"
-echo "  Browser link: https://search.maven.org/search?q=$query"
+echo
+echo "Browser link:"
+echo "  https://search.maven.org/search?q=$query"
 echo
 echo "Artifacts:"
 
