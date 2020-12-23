@@ -1,14 +1,28 @@
+# enable this line for profiling (also zprof at the end of this file)
+# zmodload zsh/zprof
+
+function load() {
+    timer=$(($(gdate +%s%N)/1000000))
+
+    source $1
+
+    now=$(($(gdate +%s%N)/1000000))
+    elapsed=$(($now-$timer))
+    echo $elapsed":" $1
+}
+
 # shortcut to this dotfiles path is $ZSH
 export ZSH=$HOME/.dotfiles
 
 # your project folder that we can `c [tab]` to
 export PROJECTS=~/projects
 
-source ~/.zsh/antigen.zsh
-antigen bundle BrandonRoehl/zsh-clean
-antigen apply
+source <(antibody init)
+antibody bundle < ~/.zsh_plugins.txt
 
+autoload -U promptinit
 fpath=($HOME/.dotfiles/zsh-clean-prompt $fpath)
+promptinit
 prompt codesmith
 
 # Stash your environment variables in ~/.localrc. This means they'll stay out
@@ -60,8 +74,10 @@ unset config_files
 unsetopt nomatch
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-eval "$(rbenv init -)"
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="/Users/brian/.sdkman"
 [[ -s "/Users/brian/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/brian/.sdkman/bin/sdkman-init.sh"
+
+# enable this line for profiling (also zmodload at the top of this file)
+# zprof

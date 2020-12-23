@@ -1,6 +1,7 @@
-# if hash groovyclient 2>/dev/null
-# then
-#     alias groovy=groovyclient
-# fi
+if hash groovyclient 2>/dev/null; then
+    alias groovy=groovyclient
+    alias gvc=groovyclient
+fi
 
-alias gr=groovysh
+alias gv=groovy
+alias gvsh=groovysh

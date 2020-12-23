@@ -1,5 +1,6 @@
 alias k=kubectl
 alias kx=kubectx
+alias kx-='kubectx -'
 alias kns=kubens
 alias ka='kubectl apply -f'
 alias kg='kubectl get'

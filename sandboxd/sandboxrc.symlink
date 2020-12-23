@@ -1,0 +1,18 @@
+# vim: set ft=zsh
+
+# nvm
+sandbox_init_nvm() {
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+    # [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+}
+
+# ruby
+sandbox_init_ruby() {
+    eval "$(rbenv init -)"
+}
+
+sandbox_hook nvm node
+sandbox_hook nvm nodemon
+
+sandbox_hook ruby rbenv
+sandbox_hook_shims ruby "$HOME/.rbenv/shims"
