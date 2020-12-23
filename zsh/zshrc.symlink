@@ -1,6 +1,7 @@
 # enable this line for profiling (also zprof at the end of this file)
 # zmodload zsh/zprof
 
+# this function can be used in place of `source` to profile zsh startup time
 function load() {
     timer=$(($(gdate +%s%N)/1000000))
 
@@ -17,9 +18,11 @@ export ZSH=$HOME/.dotfiles
 # your project folder that we can `c [tab]` to
 export PROJECTS=~/projects
 
+# initialize antibody plugin manager
 source <(antibody init)
 antibody bundle < ~/.zsh_plugins.txt
 
+# initialize custom prompt
 autoload -U promptinit
 fpath=($HOME/.dotfiles/zsh-clean-prompt $fpath)
 promptinit

@@ -18,3 +18,5 @@ alias /='cd /'
 alias ~='cd ~'
 
 alias md='mkdir -p'
+
+alias s='web_search duckduckgo'
