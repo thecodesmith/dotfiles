@@ -1,5 +1,7 @@
+zsh-users/zsh-completions
 BrandonRoehl/zsh-clean
 benvan/sandboxd
+
 ohmyzsh/ohmyzsh path:plugins/vi-mode
 ohmyzsh/ohmyzsh path:plugins/z
 ohmyzsh/ohmyzsh path:plugins/web-search
