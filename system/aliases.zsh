@@ -48,3 +48,4 @@ alias metro="open ~/.metro-transit/routes/535.pdf"
 alias bus="open ~/.metro-transit/routes/535.pdf"
 
 alias watch='watch --color '
+alias typora='open -a typora'

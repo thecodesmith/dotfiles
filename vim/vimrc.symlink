@@ -46,6 +46,7 @@ Plugin 'dkprice/vim-easygrep'                   " TODO: learn to use this
 Plugin 'msanders/snipmate.vim'                  " snippets
 Plugin 'rstacruz/sparkup'                       " HTML shorthand support
 Plugin 'airblade/vim-rooter'                    " Automatically change to root directory of project
+Plugin 'airblade/vim-gitgutter'                 " Show git line status in gutter
 Plugin 'christoomey/vim-tmux-navigator'         " Navigate between tmux panes and vim splits
 Plugin 'christoomey/vim-conflicted'
 Plugin 'editorconfig/editorconfig-vim'          " Support for .editorconfig files
@@ -265,11 +266,11 @@ autocmd BufWritePre * :call <SID>StripTrailingWhitespace()
 " Toggle paste insert mode
 set pastetoggle=<F8>
 
-" Highlight column 80 in Python files
+" Highlight column 100 in Python files
 augroup python
   " clear augroup when reloading vimrc
   autocmd!
-  autocmd FileType python set colorcolumn=80
+  autocmd FileType python set colorcolumn=100
 augroup END
 
 " Fix crontab

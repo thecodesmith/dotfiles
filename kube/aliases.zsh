@@ -4,9 +4,10 @@ alias kx-='kubectx -'
 alias kns=kubens
 alias ka='kubectl apply -f'
 alias kg='kubectl get'
-# alias kgp='kubectl get po'
+alias kgd='kubectl get deploy'
 alias kgpw="watch -n 1 'zsh -c \"kubectl get po $@ | kubectl-colorized\"'"
 alias kd='kubectl describe'
+alias kdp='kubectl describe po'
 alias klint='kubeval --strict'
 
 function kgp() {
@@ -14,7 +15,7 @@ function kgp() {
 }
 
 # function kgpw() {
-#     watch -n 1 "zsh -c 'kubectl get po $@ | kubectl-colorized'"
+#     watch -n 1 "zsh -c 'kubectl get po $@' | kubectl-colorized"
 # }
 
 function kscale-ns() {

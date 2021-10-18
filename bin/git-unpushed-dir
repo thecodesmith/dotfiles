@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+print_unpushed_stats() {
+    count="$(git log --branches --not --remotes | grep "^commit" | wc -l | xargs)"
+    if [ "$count" -ne 0 ]; then
+        echo "$(realpath $(pwd) --relative-to "$ROOT")  [ commits: $count ]"
+    fi
+}
+
+export -f print_unpushed_stats
+
+find . -type d -iname .git -exec sh -c 'export ROOT="$(pwd)" && cd "$(dirname ${0})" && print_unpushed_stats' '{}' \;

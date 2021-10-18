@@ -19,6 +19,8 @@
 
 if [ ! -z "$1" ] && [ -s "$PROJECTS/jamf/$1" ]; then
   pushd "$PROJECTS/jamf/$1"
+elif [ ! -z "$1" ] && [ -s "$PROJECTS/jamf/build-infrastructure/$1" ]; then
+  pushd "$PROJECTS/jamf/build-infrastructure/$1"
 else
   pushd "$PROJECTS/$1"
 fi
