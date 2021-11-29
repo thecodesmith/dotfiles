@@ -7,6 +7,7 @@ fi
 
 alias showFiles='defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Library/CoreServices/Finder.app'
 alias hideFiles='defaults write com.apple.finder AppleShowAllFiles NO; killall Finder /System/Library/CoreServices/Finder.app'
+alias dns-flush-cache='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
 
 function ip() {
     ifconfig | grep inet | cut -f2 -d ' ' | grep -v ':' | grep -v '^127.0.0.1'
