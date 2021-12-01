@@ -12,6 +12,8 @@ function load() {
     echo $elapsed":" $1
 }
 
+export PATH="$PATH:/usr/local/bin"
+
 # shortcut to this dotfiles path is $ZSH
 export ZSH=$HOME/.dotfiles
 
@@ -79,9 +81,9 @@ unsetopt nomatch
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="/Users/brian/.sdkman"
-[[ -s "/Users/brian/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/brian/.sdkman/bin/sdkman-init.sh"
-
 # enable this line for profiling (also zmodload at the top of this file)
 # zprof
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"

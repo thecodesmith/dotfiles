@@ -13,15 +13,17 @@ then
 fi
 
 # Install homebrew casks
-brew cask install iterm2 \
-                  atom \
-                  jetbrains-toolbox
+brew install --cask \
+    iterm2 \
+    atom \
+    jetbrains-toolbox
 
 # Install homebrew packages
 brew install bash-completion \
              python \
              the_silver_searcher \
              tree \
+             fzf
              git \
              gpg \
              grc \

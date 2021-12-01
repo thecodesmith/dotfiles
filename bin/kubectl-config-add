@@ -1,0 +1,13 @@
+#!/usr/local/bin/zsh
+
+add_file="$1"
+kube_dir="$HOME/.kube"
+
+if [ -z "$add_file" ]; then
+    echo "Usage: kubectl-config-add new-config-file.yaml"
+    exit 1
+fi
+
+yq eval-all 'select(fileIndex == 0) *+ select(fileIndex == 1)' "$kube_dir/config" "$add_file" > "$kube_dir/config.new"
+mv "$kube_dir/config" "$kube_dir/config.bak"
+mv "$kube_dir/config.new" "$kube_dir/config"
