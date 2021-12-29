@@ -20,6 +20,7 @@ brew install --cask \
 
 # Install homebrew packages
 brew install bash-completion \
+             bat \
              python \
              the_silver_searcher \
              tree \

@@ -27,7 +27,7 @@ fi
 
 raw_query="$1"
 query="${1// /%20}"
-count='20'
+count='200'
 
 shift
 
@@ -51,4 +51,4 @@ echo "  https://search.maven.org/search?q=$query"
 echo
 echo "Artifacts:"
 
-curl -sSL "https://search.maven.org/solrsearch/select?q=$query&rows=$count&wt=json&core=gav" | jq -r '.response.docs[].id'
+curl -sSL "https://search.maven.org/solrsearch/select?q=$query&rows=$count&wt=json&core=gav" | jq -r '.response.docs[].id' | sort

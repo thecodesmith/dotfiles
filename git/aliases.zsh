@@ -10,11 +10,16 @@ then
   alias git=$hub_path
 fi
 
+# batdiff() {
+#     echo "git diff --name-only --diff-filter=d $@ | xargs bat --diff"
+#     git diff --name-only --diff-filter=d $@ | xargs bat --diff
+# }
+
 # Git aliases
 alias gl='git pull --prune'
 alias glog="git log --graph --pretty=format:'%Cred%h%Creset %an: %s - %Creset %C(yellow)%d%Creset %Cgreen(%cr)%Creset' --abbrev-commit --date=relative"
 alias gp='git push origin HEAD'
-alias gd='git diff'
+alias gd='batdiff'
 alias gds='git diff --staged'
 alias ga='git add'
 alias gc='git commit'

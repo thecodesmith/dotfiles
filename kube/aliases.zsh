@@ -9,6 +9,7 @@ alias kgpw="watch -n 1 'zsh -c \"kubectl get po $@ | kubectl-colorized\"'"
 alias kd='kubectl describe'
 alias kdp='kubectl describe po'
 alias klint='kubeval --strict'
+alias krm='kubectl delete'
 
 function kgp() {
     kubectl get po $@ | kubectl-colorized

@@ -1,6 +1,6 @@
 if [[ "$OS" == 'OSX' ]]
 then
-  alias ls='ls -G'
+  # alias ls='ls -G' # color does not seem to work
   alias ll='ls -alGh'
 elif [[ "$OS" == 'LINUX' ]]
 then
@@ -20,3 +20,5 @@ alias ~='cd ~'
 alias md='mkdir -p'
 
 alias s='web_search duckduckgo'
+alias cat='bat'
+alias man='batman'

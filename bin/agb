@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+ag $1 -G 'build.gradle|settings.gradle|gradle.properties|pom.xml'
