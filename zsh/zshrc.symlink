@@ -1,6 +1,8 @@
 # enable this line for profiling (also zprof at the end of this file)
 # zmodload zsh/zprof
 
+autoload -U promptinit; promptinit
+
 # this function can be used in place of `source` to profile zsh startup time
 function load() {
     timer=$(($(gdate +%s%N)/1000000))
@@ -20,15 +22,44 @@ export ZSH=$HOME/.dotfiles
 # your project folder that we can `c [tab]` to
 export PROJECTS=~/projects
 
-# initialize antibody plugin manager
-source <(antibody init)
-antibody bundle < ~/.zsh_plugins.txt
+# Download Znap, if it's not there yet.
+[[ -f ~/Git/zsh-snap/znap.zsh ]] ||
+    git clone --depth 1 -- https://github.com/marlonrichert/zsh-snap.git ~/Git/zsh-snap
 
-# initialize custom prompt
-autoload -U promptinit
-fpath=($HOME/.dotfiles/zsh-clean-prompt $fpath)
-promptinit
-prompt codesmith
+# Start Znap
+source ~/.zsh-snap/znap.zsh
+
+# `znap prompt` makes your prompt visible in just 15-40ms!
+znap prompt thecodesmith/pure
+
+zstyle :prompt:pure:path color '45'
+zstyle :prompt:pure:git:dirty color red
+zstyle :prompt:pure:prompt:success color white
+zstyle :prompt:pure:git:arrow color yellow
+
+# `znap source` automatically downloads and starts your plugins.
+# znap source BrandonRoehl/zsh-clean
+# znap source marlonrichert/zsh-autocomplete
+# znap source ohmyzsh/ohmyzsh plugins/fzf
+# znap source ohmyzsh/ohmyzsh plugins/vi-mode
+# znap source ohmyzsh/ohmyzsh plugins/web-search
+# znap source ohmyzsh/ohmyzsh plugins/z
+# znap source zsh-users/zsh-autosuggestions
+# znap source zsh-users/zsh-completions
+# znap source zsh-users/zsh-syntax-highlighting
+
+# `znap eval` caches and runs any kind of command output for you.
+# znap eval iterm2 'curl -fsSL https://iterm2.com/shell_integration/zsh'
+
+# `znap function` lets you lazy-load features you don't always need.
+# znap function _pyenv pyenvn 'eval "$( pyenv init - --no-rehash )"'
+# compctl -K    _pyenv pyenv
+
+# # initialize custom prompt
+# autoload -U promptinit
+# fpath=($HOME/.dotfiles/zsh-clean-prompt $fpath)
+# promptinit
+# prompt codesmith
 
 # Stash your environment variables in ~/.localrc. This means they'll stay out
 # of your main dotfiles repository (which may be public, like this one), but
