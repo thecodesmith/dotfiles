@@ -6,6 +6,7 @@
 [user]
         name = AUTHORNAME
         email = AUTHOREMAIL
+        signingkey = 16779A0E
 [credential]
         helper = GIT_CREDENTIAL_HELPER
 [alias]
@@ -39,3 +40,10 @@
         #
         # Setting to git 2.0 default to suppress warning message
         default = simple
+[init]
+        templatedir = ~/.git_template
+        defaultBranch = master
+[commit]
+        gpgSign = true
+[tag]
+        gpgSign = true
