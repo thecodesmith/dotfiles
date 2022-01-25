@@ -273,6 +273,12 @@ augroup python
   autocmd FileType python set colorcolumn=100
 augroup END
 
+" Enable wrap for markdown files
+augroup Markdown
+  autocmd!
+  autocmd FileType markdown set wrap
+augroup END
+
 " Fix crontab
 autocmd filetype crontab setlocal nobackup nowritebackup
 
