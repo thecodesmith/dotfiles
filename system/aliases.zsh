@@ -1,22 +1,17 @@
-# grc overides for ls
-#   Made possible through contributions from generous benefactors like
-#   `brew install coreutils`
-if $(gls &>/dev/null)
-then
-  alias ls="gls -F --color"
-  alias l="gls -lAh --color"
-  alias ll="gls -l --color"
-  alias la='gls -A --color'
+# grc overides for ls - made possible by `brew install coreutils`
+if $(gls &>/dev/null); then
+    alias ls="gls -Fh --color"
+    alias l="gls -lAh --color"
+    alias ll="gls -lh --color"
+    alias la='gls -Ah --color'
 fi
 
-if [[ $OS == 'LINUX' ]]
-then
-  alias pbcopy='xsel --clipboard --input'
-  alias pbpaste='xsel --clipboard --output'
-  alias bigs='du -hs * | sort -hr'
-elif [[ `os` == 'osx' ]]
-then
-  alias bigs='du -hs * | gsort -hr'
+if [[ $OS == 'OSX' ]]; then
+    alias bigs='du -hs * | gsort -hr'
+elif [[ $OS == 'LINUX' ]]; then
+    alias bigs='du -hs * | sort -hr'
+    alias pbcopy='xsel --clipboard --input'
+    alias pbpaste='xsel --clipboard --output'
 fi
 
 alias json='python3 -m json.tool'
@@ -33,19 +28,16 @@ close_all_panes() {
     tmux kill-pane
 }
 
-# typos
+# autocorrect typos
 alias clera=clear
 alias cler=clear
 alias eixt=exit
 alias eit=exit
 alias exi=exit
+
+# vim aliases
 alias :q=exit
 alias :qa=close_all_panes
 alias :wq=exit
 
-# metro transit
-alias metro="open ~/.metro-transit/routes/535.pdf"
-alias bus="open ~/.metro-transit/routes/535.pdf"
-
 alias watch='watch --color '
-alias typora='open -a typora'

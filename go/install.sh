@@ -1,4 +1,4 @@
-GOPATH=$HOME/projects/go
+GOPATH=$HOME/code/go
 GOROOT=/usr/local/opt/go/libexec
 
 mkdir -p $GOPATH
