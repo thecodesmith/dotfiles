@@ -15,10 +15,6 @@ function kgp() {
     kubectl get po $@ | kubectl-colorized
 }
 
-# function kgpw() {
-#     watch -n 1 "zsh -c 'kubectl get po $@' | kubectl-colorized"
-# }
-
 function kscale-ns() {
     replicas="$1"
     ns="$2"

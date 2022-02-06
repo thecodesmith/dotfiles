@@ -2,10 +2,19 @@
 
 brew install kubectl
 brew install kubectx
-brew install kustomize
 brew install stern
+brew install kustomize
 brew install helm
 
-git clone git@github.com:ahmetb/kubectl-aliases.git ~/.kubectl_aliases
-
 go get -u github.com/gabeduke/kubectl-iexec
+
+# Install Krew - https://krew.sigs.k8s.io
+(
+  set -x; cd "$(mktemp -d)" &&
+  OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
+  ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&
+  KREW="krew-${OS}_${ARCH}" &&
+  curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&
+  tar zxvf "${KREW}.tar.gz" &&
+  ./"${KREW}" install krew
+)
