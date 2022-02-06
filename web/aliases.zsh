@@ -34,8 +34,9 @@ function _web_search() {
 }
 
 function web_search() {
-    _web_search "$@" && ~/.i3/scripts/launchBrowser.sh
+    _web_search "$@" # && ~/.i3/scripts/launchBrowser.sh
 }
+
 alias google='web_search google'
 alias ddg='web_search duckduckgo'
 alias sp='web_search startpage'
