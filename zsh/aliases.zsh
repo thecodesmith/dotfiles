@@ -18,6 +18,5 @@ alias ~='cd ~'
 
 alias md='mkdir -p'
 
-alias s='web_search duckduckgo'
 alias cat='bat'
 alias man='batman'
