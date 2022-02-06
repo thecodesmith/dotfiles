@@ -1,5 +1,4 @@
-if [[ "$OS" == 'OSX' ]]
-then
+if [[ "$OS" == 'OSX' ]]; then
   # alias ls='ls -G' # color does not seem to work
   alias ll='ls -alGh'
 elif [[ "$OS" == 'LINUX' ]]
