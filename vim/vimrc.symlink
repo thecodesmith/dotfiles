@@ -51,9 +51,11 @@ Plugin 'christoomey/vim-tmux-navigator'         " Navigate between tmux panes an
 Plugin 'christoomey/vim-conflicted'
 Plugin 'editorconfig/editorconfig-vim'          " Support for .editorconfig files
 Plugin 'chrisbra/vim-autoread'
+Plugin 'chrisbra/Colorizer'
 Plugin 'powerman/vim-plugin-AnsiEsc'            " Use :AnsiEsc to enable colorized text
 " Plugin 'vim-syntastic/syntastic'
 Plugin '907th/vim-auto-save'                    " AutoSave buffer
+Plugin 'ap/vim-css-color'                       " Highlight color codes
 
 " " Language support
 " Plugin 'sheerun/vim-polyglot'
@@ -63,6 +65,12 @@ Plugin 'chr4/nginx.vim'
 Plugin 'Glench/Vim-Jinja2-Syntax'
 Plugin 'milch/vim-fastlane'
 Plugin 'rust-lang/rust.vim'
+Plugin 'othree/xml.vim'
+
+" Python plugins
+Plugin 'psf/black'
+Plugin 'andviro/flake8-vim'
+
 " " Plugin 'tpope/vim-fireplace'
 " " Plugin 'tpope/vim-classpath'
 " " TODO: This vim-gradle plugin is good, but should be changed to use the same syntax
@@ -137,6 +145,12 @@ nnoremap / /\v
 vnoremap / /\v
 
 """ Plugin-specific configurations {{{
+
+" Flake8
+let g:PyFlakeOnWrite = 1
+
+" Black
+autocmd BufWritePre *.py execute ':Black'
 
 " Rooter
 let g:rooter_patterns = ['settings.gradle']
