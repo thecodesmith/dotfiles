@@ -1,6 +1,6 @@
 # dotfiles
 
-_This project was originally forked from Zach Holman's dotfiles, 
+_This project was originally forked from Zach Holman's dotfiles,
 found [here](https://github.com/holman/dotfiles)._
 
 ## install
@@ -48,3 +48,4 @@ There's a few special files in the hierarchy.
   your `$HOME`. This is so you can keep all of those versioned in your dotfiles
   but still keep those autoloaded files in your home directory. These get
   symlinked in when you run `script/bootstrap`.
+
