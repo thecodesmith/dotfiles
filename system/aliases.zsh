@@ -37,6 +37,7 @@ alias eit=exit
 alias exi=exit
 
 # vim aliases
+alias q=exit
 alias :q=exit
 alias :qa=close_all_panes
 alias :wq=exit

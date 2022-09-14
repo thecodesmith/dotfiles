@@ -39,4 +39,5 @@ sed "s/ Running / $(green 'Running') /" |
     sed "s/ Pending / $(cyan 'Pending') /" |
     sed "s/ ContainerCreating / $(cyan 'ContainerCreating') /" |
     sed "s/ PodInitializing / $(cyan 'PodInitializing') /" |
-    sed "s/ Init:/ $(cyan 'Init:')/"
+    sed "s/ Init:/ $(cyan 'Init:')/" |
+    sed "s| 0/| $(yellow '0')/|"

@@ -20,7 +20,9 @@ function kscale-ns() {
     ns="$2"
     if [ -z "$ns" ]; then
         kubectl get deploy -n "$ns" -o name | xargs -I % kubectl scale % --replicas="$replicas" -n "$ns"
+        kubectl get statefulset -n "$ns" -o name | xargs -I % kubectl scale % --replicas="$replicas" -n "$ns"
     else
         kubectl get deploy -o name | xargs -I % kubectl scale % --replicas="$replicas"
+        kubectl get statefulset -o name | xargs -I % kubectl scale % --replicas="$replicas"
     fi
 }
