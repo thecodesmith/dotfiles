@@ -11,7 +11,7 @@ git -C $ZSH pull
 
 if [[ `os` == 'osx' ]]; then
   # Set OS X defaults
-  $ZSH/osx/set-defaults.sh
+  $ZSH/macos/set-defaults.sh
 
   # Upgrade homebrew
   brew update
