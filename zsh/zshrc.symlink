@@ -12,8 +12,6 @@ function load() {
     echo $elapsed":" $1
 }
 
-export PATH="$PATH:/usr/local/bin"
-
 # Shortcut to this dotfiles path is $ZSH
 export ZSH=$HOME/.dotfiles
 
@@ -26,6 +24,7 @@ else
     export OS='LINUX'
 fi
 
+# Load zsh prompt
 source $ZSH/zsh/prompt.sh
 
 # Stash your environment variables in ~/.localrc. This means they'll stay out
@@ -74,5 +73,3 @@ export SDKMAN_DIR="$HOME/.sdkman"
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-export KUBECONFIG=~/.kube/config:~/.kube/eks
