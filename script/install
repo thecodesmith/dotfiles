@@ -6,6 +6,8 @@ set -e
 
 cd "$(dirname $0)"/..
 
+export PATH="$PWD/bin:$PATH"
+
 # install homebrew first so tools are available
 if [ -f homebrew/install.sh ]; then
     bash -c homebrew/install.sh

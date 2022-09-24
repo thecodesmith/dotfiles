@@ -24,7 +24,7 @@ brew install bash-completion \
              python \
              the_silver_searcher \
              tree \
-             fzf
+             fzf \
              git \
              gpg \
              grc \

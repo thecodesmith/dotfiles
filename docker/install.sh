@@ -5,4 +5,4 @@
 
 # Use Rancher Desktop in place of Docker Desktop
 brew install docker --cask
-brew install rancher
+#brew install rancher
