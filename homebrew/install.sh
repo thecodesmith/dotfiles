@@ -38,6 +38,8 @@ brew install bash-completion \
              jq \
              yq
 
+$(brew --prefix)/opt/fzf/install --all
+
 brew tap jmespath/jmespath
 brew install jmespath/jmespath/jp
 
