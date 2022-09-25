@@ -1,8 +1,8 @@
-# enable this line for profiling (also zprof at the end of this file)
 # zmodload zsh/zprof
+# enable this line for profiling (also zprof at the end of this file)
 
-# this function can be used in place of `source` to profile zsh startup time
 function load() {
+# this function can be used in place of `source` to profile zsh startup time
     timer=$(($(gdate +%s%N)/1000000))
 
     source $1
@@ -37,6 +37,8 @@ fi
 # Find all zsh files
 typeset -U config_files
 config_files=($ZSH/**/*.zsh)
+
+source $ZSH/system/_path.zsh
 
 # Load the path files
 for file in ${(M)config_files:#*/path.zsh}; do
