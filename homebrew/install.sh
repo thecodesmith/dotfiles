@@ -33,6 +33,7 @@ brew install bash-completion \
              hub \
              gist \
              nmap \
+             terminal-notifier \
              tmux \
              vim \
              jq \

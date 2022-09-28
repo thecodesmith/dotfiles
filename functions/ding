@@ -1,0 +1,8 @@
+#!/bin/bash
+
+function ding() {
+    zmodload zsh/parameter
+    cmd="$(echo "${history[$HISTCMD]}" | rev | cut -d';' -f2- | rev)"
+
+    terminal-notifier -title 'Command complete' -message "$cmd" -sound default
+}
