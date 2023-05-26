@@ -26,6 +26,7 @@ call vundle#begin()
 """ Put Vundle plugins here {{{
 Plugin 'gmarik/Vundle.vim'
 
+Plugin 'ycm-core/YouCompleteMe'                 " code completion
 Plugin 'thecodesmith/vim-colorscheme-codesmith' " my custom darcula-like colorscheme
 Plugin 'tpope/vim-commentary'                   " comments for different filetypes
 Plugin 'tpope/vim-abolish'                      " auto-correct custom words, coerce to snake-case, etc
@@ -124,6 +125,7 @@ set noerrorbells    " don't beep
 set hidden          " hide buffers instead of closing them
 set nobackup        " don't write a backup file
 set noswapfile      " don't write a swap file
+set clipboard=unnamed " use system clipboard by default for yank/paste
 
 set tags=tags;      " Set the tags file
 
@@ -150,7 +152,10 @@ vnoremap / /\v
 let g:PyFlakeOnWrite = 1
 
 " Black
-autocmd BufWritePre *.py execute ':Black'
+augroup black_on_save
+  autocmd!
+  autocmd BufWritePre *.py Black
+augroup end
 
 " Rooter
 let g:rooter_patterns = ['settings.gradle']
@@ -162,6 +167,7 @@ let g:polyglot_disabled = ['groovy', 'jenkins', 'markdown']
 let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
 let g:ctrlp_clear_cache_on_exit = 0
 let g:ctrlp_root_markers = ['settings.gradle']
+let g:ctrlp_mruf_save_on_update = 1
 
 " The Silver Searcher
 if executable('ag')
@@ -215,9 +221,9 @@ vnoremap <leader>n :NERDTreeToggle<CR>
 " Slime
 let g:slime_python_ipython = 1
 
-" Scratch
-nnoremap <leader>s :Scratch<CR>
-vnoremap <leader>s :Scratch<CR>
+" " Scratch
+" nnoremap <leader>s :Scratch<CR>
+" vnoremap <leader>s :Scratch<CR>
 
 " Tabularize
 nnoremap <leader>= :Tabularize<Space>/

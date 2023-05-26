@@ -1,6 +1,6 @@
 zsh-users/zsh-completions
-thecodesmith/pure
 benvan/sandboxd
+bonnefoa/kubectl-fzf
 
 ohmyzsh/ohmyzsh path:plugins/vi-mode
 ohmyzsh/ohmyzsh path:plugins/z

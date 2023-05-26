@@ -24,6 +24,9 @@ else
     export OS='LINUX'
 fi
 
+# Load znap prompt/plugin manager (https://github.com/marlonrichert/zsh-snap)
+source $ZSH/zsh/znap.sh
+
 # Load zsh prompt
 source $ZSH/zsh/prompt.sh
 

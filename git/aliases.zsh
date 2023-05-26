@@ -27,6 +27,10 @@ alias gca='git commit -a'
 alias gcm='git commit -m'
 alias gco='git checkout'
 alias gcb='git copy-branch-name'
-alias gb='git branch --sort=-committerdate'
+# alias gb='git branch --sort=-committerdate'
 alias gs='git status -sb'
 alias ga.='git add .'
+
+function gb() {
+    git checkout $(git branch --sort=-committerdate $@ | fzf | tr -d '[:space:]')
+}

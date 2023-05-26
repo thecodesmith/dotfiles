@@ -5,9 +5,10 @@ fpath=($ZSH/functions $fpath)
 
 autoload -U $ZSH/functions/*(:t)
 
-HISTFILE=~/.zsh_history
-HISTSIZE=100000
-SAVEHIST=100000
+export HISTFILE=~/.zsh_history
+export HISTSIZE=1000000000
+export HISTFILESIZE=$HISTSIZE
+export SAVEHIST=$HISTSIZE
 
 setopt NO_BG_NICE # don't nice background tasks
 setopt NO_HUP
@@ -24,7 +25,7 @@ setopt IGNORE_EOF
 
 setopt APPEND_HISTORY # adds history
 setopt INC_APPEND_HISTORY SHARE_HISTORY  # adds history incrementally and share it across sessions
-setopt HIST_IGNORE_ALL_DUPS  # don't record dupes in history
+setopt HIST_FIND_NO_DUPS  # don't record dupes in history
 setopt HIST_REDUCE_BLANKS
 
 zle -N newtab

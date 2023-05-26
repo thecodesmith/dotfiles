@@ -6,7 +6,9 @@ brew install stern
 brew install kustomize
 brew install helm
 
-go get -u github.com/gabeduke/kubectl-iexec
+go install github.com/gabeduke/kubectl-iexec@main
+go install github.com/bonnefoa/kubectl-fzf/v3/cmd/kubectl-fzf-completion@main
+go install github.com/bonnefoa/kubectl-fzf/v3/cmd/kubectl-fzf-server@main
 
 # Install Krew - https://krew.sigs.k8s.io
 (
