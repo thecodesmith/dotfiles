@@ -1,0 +1,49 @@
+#!/usr/bin/env zsh
+
+USAGE="
+Usage:
+  kubectl-get-pods [flags]
+
+Flags:
+  -g, --grep       Filter pods by name or status
+  -w, --watch      Enable watching output
+  -i, --interval   Watch interval
+      --verbose    Verbose output
+  -h, --help       Display this message
+"
+
+if [[ "$*" == *'--verbose'* ]]; then
+    verbose=true
+    set -x
+fi
+
+filter='^'
+watch=false
+interval=2
+watch_flags='--no-title'
+
+while test $# -gt 0; do
+    case "$1" in
+        -g|--grep)      shift; filter="$1"    ;;
+        -w|--watch)     watch=true            ;;
+        -i|--interval)  shift; interval="$1"  ;;
+        -v|--verbose)   verbose=true          ;;
+        -h|--help)      echo "$USAGE" && exit ;;
+        *)
+            echo "Error: invalid option $1"
+            echo "$USAGE"
+            exit 1
+            ;;
+    esac
+    shift
+done
+
+if [ "$verbose" = true ]; then
+    watch_flags=''
+fi
+
+if [ "$watch" = true ]; then
+    watch $watch_flags --color -n "$interval" "zsh -c 'kubectl get pods | grep -E \"$filter|^NAME\"' | kubectl-colorized"
+else
+    kubectl get pods | grep -E "$filter|^NAME" | kubectl-colorized
+fi
