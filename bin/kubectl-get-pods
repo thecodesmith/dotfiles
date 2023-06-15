@@ -8,13 +8,14 @@ Flags:
   -g, --grep       Filter pods by name or status
   -w, --watch      Enable watching output
   -i, --interval   Watch interval
+  -n, --namespace  Pod namespace
       --verbose    Verbose output
   -h, --help       Display this message
 "
 
 if [[ "$*" == *'--verbose'* ]]; then
     verbose=true
-    set -x
+    # set -x
 fi
 
 filter='^'
@@ -27,6 +28,7 @@ while test $# -gt 0; do
         -g|--grep)      shift; filter="$1"    ;;
         -w|--watch)     watch=true            ;;
         -i|--interval)  shift; interval="$1"  ;;
+        -n|--namespace) shift; namespace="$1" ;;
         -v|--verbose)   verbose=true          ;;
         -h|--help)      echo "$USAGE" && exit ;;
         *)
@@ -42,8 +44,12 @@ if [ "$verbose" = true ]; then
     watch_flags=''
 fi
 
+if [ -n "$namespace" ]; then
+    kubectl_flags="--namespace $namespace"
+fi
+
 if [ "$watch" = true ]; then
-    watch $watch_flags --color -n "$interval" "zsh -c 'kubectl get pods | grep -E \"$filter|^NAME\"' | kubectl-colorized"
+    watch $watch_flags --color -n "$interval" "zsh -c 'kubectl get pods $kubectl_flags | grep -E \"$filter|^NAME\"' | kubectl-colorized"
 else
     kubectl get pods | grep -E "$filter|^NAME" | kubectl-colorized
 fi
