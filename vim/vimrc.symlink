@@ -3,93 +3,69 @@
 " vimrc is not vi-compatible
 set nocompatible
 
-" Setting up Vundle - the vim plugin bundler
-
-""" Vundle plugin manager {{{
-let vundle_first_run=0
-let vundle_readme=expand('~/.vim/bundle/Vundle.vim/README.md')
-if !filereadable(vundle_readme)
-  echo "Installing Vundle..."
-  echo ""
-  silent !mkdir -p ~/.vim/bundle
-  silent !git clone https://github.com/gmarik/Vundle.vim ~/.vim/bundle/Vundle.vim
-  let vundle_first_run=1
+" Set up vim-plug plugin manager
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
-""" }}}
 
-""" Initialize Vundle {{{
-filetype off
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-""" }}}
+call plug#begin('~/.vim/bundle')
 
-""" Put Vundle plugins here {{{
-Plugin 'gmarik/Vundle.vim'
+""" Put plugins here {{{
 
-Plugin 'ycm-core/YouCompleteMe'                 " code completion
-Plugin 'thecodesmith/vim-colorscheme-codesmith' " my custom darcula-like colorscheme
-Plugin 'tpope/vim-commentary'                   " comments for different filetypes
-Plugin 'tpope/vim-abolish'                      " auto-correct custom words, coerce to snake-case, etc
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'thecodesmith/vim-colorscheme-codesmith' " my custom darcula-like colorscheme
+Plug 'tpope/vim-commentary'                   " comments for different filetypes
+Plug 'tpope/vim-abolish'                      " auto-correct custom words, coerce to snake-case, etc
 " Plugin 'tpope/vim-ragtag'                       " adds closing tags for tag-based languages (html, xml, erb)
-Plugin 'tpope/vim-surround'                     " change surrounding elements (quotes, parens, etc.)
-Plugin 'tpope/vim-repeat'                       " allow . to repeat more actions
-Plugin 'tpope/vim-fugitive'                     " TODO: learn to use this more. git wrapper
-Plugin 'tpope/vim-cucumber'
-Plugin 'tpope/vim-obsession'                    " enable vim sessions
-Plugin 'godlygeek/tabular'                      " quickly align elements
-Plugin 'terryma/vim-multiple-cursors'           " ...
-Plugin 'Raimondi/delimitMate'                   " TODO: replace this with a better one. inserts matching quotes, brackets, etc.
-Plugin 'vim-scripts/taglist.vim'                " TODO: learn to use this. shows file structure (functions, etc) in a split window
-Plugin 'scrooloose/nerdtree'                    " file tree browser
-Plugin 'Xuyuanp/nerdtree-git-plugin'            " show git status in nerdtree
-Plugin 'kien/ctrlp.vim'                         " file path fuzzy search
-Plugin 'dkprice/vim-easygrep'                   " TODO: learn to use this
-Plugin 'msanders/snipmate.vim'                  " snippets
-Plugin 'rstacruz/sparkup'                       " HTML shorthand support
-Plugin 'airblade/vim-rooter'                    " Automatically change to root directory of project
-Plugin 'airblade/vim-gitgutter'                 " Show git line status in gutter
-Plugin 'christoomey/vim-tmux-navigator'         " Navigate between tmux panes and vim splits
-Plugin 'christoomey/vim-conflicted'
-Plugin 'editorconfig/editorconfig-vim'          " Support for .editorconfig files
-Plugin 'chrisbra/vim-autoread'
-Plugin 'chrisbra/Colorizer'
-Plugin 'powerman/vim-plugin-AnsiEsc'            " Use :AnsiEsc to enable colorized text
+Plug 'tpope/vim-surround'                     " change surrounding elements (quotes, parens, etc.)
+Plug 'tpope/vim-repeat'                       " allow . to repeat more actions
+Plug 'tpope/vim-fugitive'                     " TODO: learn to use this more. git wrapper
+Plug 'tpope/vim-cucumber'
+Plug 'tpope/vim-obsession'                    " enable vim sessions
+Plug 'godlygeek/tabular'                      " quickly align elements
+Plug 'terryma/vim-multiple-cursors'           " ...
+Plug 'Raimondi/delimitMate'                   " TODO: replace this with a better one. inserts matching quotes, brackets, etc.
+Plug 'vim-scripts/taglist.vim'                " TODO: learn to use this. shows file structure (functions, etc) in a split window
+Plug 'scrooloose/nerdtree'                    " file tree browser
+Plug 'Xuyuanp/nerdtree-git-plugin'            " show git status in nerdtree
+Plug 'kien/ctrlp.vim'                         " file path fuzzy search
+Plug 'dkprice/vim-easygrep'                   " TODO: learn to use this
+Plug 'airblade/vim-rooter'                    " Automatically change to root directory of project
+Plug 'airblade/vim-gitgutter'                 " Show git line status in gutter
+Plug 'christoomey/vim-tmux-navigator'         " Navigate between tmux panes and vim splits
+Plug 'christoomey/vim-conflicted'
+Plug 'editorconfig/editorconfig-vim'          " Support for .editorconfig files
+Plug 'chrisbra/vim-autoread'
+Plug 'chrisbra/Colorizer'
+Plug 'powerman/vim-plugin-AnsiEsc'            " Use :AnsiEsc to enable colorized text
 " Plugin 'vim-syntastic/syntastic'
-Plugin '907th/vim-auto-save'                    " AutoSave buffer
-Plugin 'ap/vim-css-color'                       " Highlight color codes
+Plug '907th/vim-auto-save'                    " AutoSave buffer
+Plug 'ap/vim-css-color'                       " Highlight color codes
 
 " " Language support
 " Plugin 'sheerun/vim-polyglot'
-Plugin 'thecodesmith/vim-groovy'
-Plugin 'udalov/kotlin-vim'
-Plugin 'chr4/nginx.vim'
-Plugin 'Glench/Vim-Jinja2-Syntax'
-Plugin 'milch/vim-fastlane'
-Plugin 'rust-lang/rust.vim'
-Plugin 'othree/xml.vim'
+Plug 'thecodesmith/vim-groovy'
+Plug 'udalov/kotlin-vim'
+Plug 'chr4/nginx.vim'
+Plug 'Glench/Vim-Jinja2-Syntax'
+Plug 'milch/vim-fastlane'
+Plug 'rust-lang/rust.vim'
+Plug 'othree/xml.vim'
 
 " Python plugins
-Plugin 'psf/black'
-Plugin 'andviro/flake8-vim'
+Plug 'psf/black', {'branch': 'stable'}
+Plug 'andviro/flake8-vim'
 
-" " Plugin 'tpope/vim-fireplace'
-" " Plugin 'tpope/vim-classpath'
+" " Plug 'tpope/vim-fireplace'
+" " Plug 'tpope/vim-classpath'
 " " TODO: This vim-gradle plugin is good, but should be changed to use the same syntax
 " " highlighting as the vim-groovy plugin.
-" " Plugin 'vim-scripts/vim-gradle' " Add gradle compiler for vim, groovy syntax highlighting in gradle files
-" """ }}} End Vundle plugins
+" " Plug 'vim-scripts/vim-gradle' " Add gradle compiler for vim, groovy syntax highlighting in gradle files
+" """ }}} End plugins
 
-""" Finalize Vundle
-call vundle#end()
-
-""" Installing plugins on first run, quits when done {{{
-if vundle_first_run == 1
-  :silent! PluginInstall
-  :qa
-endif
-""" }}}
-
-" Finished setting up Vundle
+call plug#end()
 
 syntax enable
 filetype on

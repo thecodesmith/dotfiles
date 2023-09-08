@@ -4,7 +4,7 @@
 set-option -g default-shell $SHELL
 
 # Increase history limit from default
-set-option -g history-limit 10000
+set-option -g history-limit 500000
 
 # Change default prefix to Ctrl-a
 set -g prefix C-a

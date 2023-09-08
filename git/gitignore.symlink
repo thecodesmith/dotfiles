@@ -5,3 +5,4 @@
 .java-version
 venv
 .venv
+.vim
