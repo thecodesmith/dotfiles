@@ -9,13 +9,12 @@ fi
 if test ! $(which brew)
 then
   echo "  Installing Homebrew for you."
-  ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
 # Install homebrew casks
 brew install --cask \
     iterm2 \
-    atom \
     jetbrains-toolbox
 
 # Install homebrew packages
@@ -30,8 +29,6 @@ brew install bash-completion \
              gpg \
              grc \
              htop \
-             hub \
-             gist \
              nmap \
              terminal-notifier \
              tmux \
@@ -40,9 +37,6 @@ brew install bash-completion \
              yq
 
 $(brew --prefix)/opt/fzf/install --all
-
-brew tap jmespath/jmespath
-brew install jmespath/jmespath/jp
 
 # UNIX tools
 brew install findutils \

@@ -19,6 +19,6 @@ if [ -f ssh/install.sh ]; then
 fi
 
 # find the installers and run them iteratively
-find . -name install.sh | grep -v homebrew | grep -v ssh | while read installer ; do
+find . -name install.sh -mindepth 2 | grep -v homebrew | grep -v ssh | while read installer ; do
     bash -c "${installer}"
 done
