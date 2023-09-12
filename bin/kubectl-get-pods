@@ -1,18 +1,19 @@
 #!/usr/bin/env zsh
 
-USAGE="
+USAGE='
 Usage:
   kubectl-get-pods [flags]
 
 Flags:
   -g, --grep       Filter pods by name or status
   -e, --exclude    Exclude pods by name or status (uses grep -v)
+  -s, --sort-by    Pod element to sort by, passed to kubectl `--sort-by` flag
   -w, --watch      Enable watching output
   -i, --interval   Watch interval
   -n, --namespace  Pod namespace
       --verbose    Verbose output
   -h, --help       Display this message
-"
+'
 
 if [[ "$*" == *'--verbose'* ]]; then
     verbose=true
@@ -21,6 +22,8 @@ fi
 
 filter='^'
 exclude=''
+kubectl_flags=''
+sortby=''
 watch=false
 interval=2
 watch_flags='--no-title'
@@ -29,6 +32,7 @@ while test $# -gt 0; do
     case "$1" in
         -g|--grep)      shift; filter="$1"    ;;
         -e|--exclude)   shift; exclude="$1"   ;;
+        -s|--sort-by)   shift; sortby="$1"    ;;
         -w|--watch)     watch=true            ;;
         -i|--interval)  shift; interval="$1"  ;;
         -n|--namespace) shift; namespace="$1" ;;
@@ -48,17 +52,21 @@ if [ "$verbose" = true ]; then
 fi
 
 if [ -n "$namespace" ]; then
-    kubectl_flags="--namespace $namespace"
+    kubectl_flags="$kubectl_flags --namespace $namespace"
 fi
 
 if [ -n "$exclude" ]; then
     exclusion="| grep -v -E '$exclude'"
 fi
 
+if [ -n "$sortby" ]; then
+    kubectl_flags="$kubectl_flags --sort-by '$sortby'"
+fi
+
+command="kubectl get pods $kubectl_flags | grep -E '$filter|^NAME' $exclusion"
+
 if [ "$watch" = true ]; then
-    watch $watch_flags --color -n "$interval" "zsh -c 'kubectl get pods $kubectl_flags | grep -E \"$filter|^NAME\"' | kubectl-colorized"
+    watch $watch_flags --color -n "$interval" "zsh -c '$command' | kubectl-colorized"
 else
-    command="kubectl get pods | grep -E '$filter|^NAME' $exclusion | kubectl-colorized"
-    echo "$command"
-    eval "$command"
+    eval "$command | kubectl-colorized"
 fi
