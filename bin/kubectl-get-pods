@@ -6,6 +6,7 @@ Usage:
 
 Flags:
   -g, --grep       Filter pods by name or status
+  -e, --exclude    Exclude pods by name or status (uses grep -v)
   -w, --watch      Enable watching output
   -i, --interval   Watch interval
   -n, --namespace  Pod namespace
@@ -19,6 +20,7 @@ if [[ "$*" == *'--verbose'* ]]; then
 fi
 
 filter='^'
+exclude=''
 watch=false
 interval=2
 watch_flags='--no-title'
@@ -26,6 +28,7 @@ watch_flags='--no-title'
 while test $# -gt 0; do
     case "$1" in
         -g|--grep)      shift; filter="$1"    ;;
+        -e|--exclude)   shift; exclude="$1"   ;;
         -w|--watch)     watch=true            ;;
         -i|--interval)  shift; interval="$1"  ;;
         -n|--namespace) shift; namespace="$1" ;;
@@ -48,8 +51,14 @@ if [ -n "$namespace" ]; then
     kubectl_flags="--namespace $namespace"
 fi
 
+if [ -n "$exclude" ]; then
+    exclusion="| grep -v -E '$exclude'"
+fi
+
 if [ "$watch" = true ]; then
     watch $watch_flags --color -n "$interval" "zsh -c 'kubectl get pods $kubectl_flags | grep -E \"$filter|^NAME\"' | kubectl-colorized"
 else
-    kubectl get pods | grep -E "$filter|^NAME" | kubectl-colorized
+    command="kubectl get pods | grep -E '$filter|^NAME' $exclusion | kubectl-colorized"
+    echo "$command"
+    eval "$command"
 fi
