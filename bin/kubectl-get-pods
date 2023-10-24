@@ -66,7 +66,7 @@ fi
 command="kubectl get pods $kubectl_flags | grep -E '$filter|^NAME' $exclusion"
 
 if [ "$watch" = true ]; then
-    watch $watch_flags --color -n "$interval" "zsh -c '$command' | kubectl-colorized"
+    watch $watch_flags --color -n "$interval" "zsh -c \"$command\" | kubectl-colorized"
 else
     eval "$command | kubectl-colorized"
 fi
