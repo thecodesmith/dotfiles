@@ -86,6 +86,7 @@ set nowrap
 set backspace=indent,eol,start
 
 set number          " show line numbers
+set relativenumber  " show relative line numbers
 set ruler
 set showcmd
 set ignorecase      " ignore case when searching
