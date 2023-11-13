@@ -2,7 +2,14 @@
 
 function ding() {
     zmodload zsh/parameter
-    cmd="$(echo "${history[$HISTCMD]}" | rev | cut -d';' -f2- | rev)"
+
+    if [ -n "$1" ]; then
+        # use ding args as notification message
+        message="$@"
+    else
+        # get last command from history to show in the notification message
+        message="$(echo "${history[$HISTCMD]}" | rev | cut -d';' -f2- | rev)"
+    fi
 
     terminal-notifier -title 'Command complete' -message "$cmd" -sound default
 }
