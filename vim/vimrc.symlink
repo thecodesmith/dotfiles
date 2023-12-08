@@ -53,6 +53,7 @@ Plug 'Glench/Vim-Jinja2-Syntax'
 Plug 'milch/vim-fastlane'
 Plug 'rust-lang/rust.vim'
 Plug 'othree/xml.vim'
+Plug 'hashivim/vim-terraform'
 
 " Python plugins
 Plug 'psf/black', {'branch': 'stable'}
