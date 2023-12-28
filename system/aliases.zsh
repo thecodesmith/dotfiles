@@ -44,3 +44,5 @@ alias :qa=close_all_panes
 alias :wq=exit
 
 alias watch='watch --color '
+
+alias utctime='date -u +"%Y-%m-%dT%H:%M:%SZ"'

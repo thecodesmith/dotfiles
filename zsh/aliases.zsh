@@ -19,4 +19,4 @@ alias ~='cd ~'
 alias md='mkdir -p'
 
 alias cat='bat'
-alias man='batman'
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"

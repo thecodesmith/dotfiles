@@ -39,3 +39,6 @@ defaults write com.apple.ImageCapture disableHotPlug -bool true
 
 # Disable Bonjour mDNS service advertising
 defaults write /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdvertisements -bool YES
+
+# Disable Sonoma redisgned wide cursor
+defaults write /Library/Preferences/FeatureFlags/Domain/UIKit.plist redesigned_text_cursor -dict-add Enabled -bool NO
