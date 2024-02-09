@@ -40,6 +40,7 @@ $(brew --prefix)/opt/fzf/install --all
 
 # UNIX tools
 brew install findutils \
+             gawk \
              gnu-sed \
              gnu-tar \
              gnu-which \

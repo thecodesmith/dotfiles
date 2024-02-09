@@ -1,0 +1,21 @@
+#!/usr/bin/env gawk -f
+
+BEGIN {
+    profile = "";
+}
+
+/\[profile\s*(.*)]/ {
+    match($2, /(.*)]/, m);
+    profile = m[1];
+    profiles[profile] = "";
+}
+
+/.*sso_account_id\s*=\s*\w+$/ {
+    profiles[profile] = $3;
+}
+
+END {
+    for (profile in profiles) {
+        printf "%-12s %s\n", profiles[profile], profile;
+    }
+}
