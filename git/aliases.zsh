@@ -31,6 +31,6 @@ alias gcb='git copy-branch-name'
 alias gs='git status -sb'
 alias ga.='git add .'
 
-function gb() {
-    git checkout $(git branch --sort=-committerdate $@ | fzf | tr -d '[:space:]')
+function gb () {
+    git checkout $(git branch -a --sort=-committerdate $@ | sed 's,remotes/origin/,,' | sort -u | fzf | tr -d '[:space:]')
 }
