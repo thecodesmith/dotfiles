@@ -30,6 +30,7 @@ alias gcb='git copy-branch-name'
 # alias gb='git branch --sort=-committerdate'
 alias gs='git status -sb'
 alias ga.='git add .'
+alias ghb='gh browse'
 
 function gb () {
     git checkout $(git branch -a --sort=-committerdate $@ | sed 's,remotes/origin/,,' | sort -u | fzf | tr -d '[:space:]')
