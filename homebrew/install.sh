@@ -36,7 +36,8 @@ brew install bash-completion \
              tmux \
              vim \
              jq \
-             yq
+             yq \
+             font-hack-nerd-font
 
 $(brew --prefix)/opt/fzf/install --all
 
