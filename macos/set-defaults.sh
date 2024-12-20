@@ -1,7 +1,4 @@
-# Sets reasonable OS X defaults.
-#
-# The original idea (and a couple settings) were grabbed from:
-#   https://github.com/mathiasbynens/dotfiles/blob/master/.osx
+# Reference https://macos-defaults.com for available defaults
 #
 # Run ./set-defaults.sh and you'll be good to go.
 
@@ -42,3 +39,10 @@ defaults write /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdv
 
 # Disable Sonoma redisgned wide cursor
 defaults write /Library/Preferences/FeatureFlags/Domain/UIKit.plist redesigned_text_cursor -dict-add Enabled -bool NO
+
+# Speed up key repeat
+defaults write -g InitialKeyRepeat -int 10 # normal minimum is 15 (225 ms)
+defaults write -g KeyRepeat -int 1 # normal minimum is 2 (30 ms)
+
+# Hide the Dock
+defaults write com.apple.dock "autohide" -bool "true" && killall Dock

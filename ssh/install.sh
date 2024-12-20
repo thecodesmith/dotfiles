@@ -5,7 +5,9 @@ if [ -d ~/.ssh ]; then
     exit
 fi
 
-git clone https://github.com/thecodesmith/dot-ssh ~/.ssh
+gh auth login
+gh repo clone https://github.com/thecodesmith/dot-ssh ~/.ssh
+
 chmod 600 ~/.ssh/*
 
 source ~/.dotfiles/ssh/ssh-agent.zsh
