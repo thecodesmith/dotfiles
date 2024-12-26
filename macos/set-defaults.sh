@@ -41,8 +41,8 @@ defaults write /Library/Preferences/com.apple.mDNSResponder.plist NoMulticastAdv
 defaults write /Library/Preferences/FeatureFlags/Domain/UIKit.plist redesigned_text_cursor -dict-add Enabled -bool NO
 
 # Speed up key repeat
-defaults write -g InitialKeyRepeat -int 10 # normal minimum is 15 (225 ms)
-defaults write -g KeyRepeat -int 1 # normal minimum is 2 (30 ms)
+defaults write -g InitialKeyRepeat -int 12 # normal minimum is 15 (225 ms)
+defaults write -g KeyRepeat -int 2 # normal minimum is 2 (30 ms)
 
 # Hide the Dock
 defaults write com.apple.dock "autohide" -bool "true" && killall Dock
