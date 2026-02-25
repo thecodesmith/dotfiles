@@ -1,2 +1,2 @@
 # Set Vim as editor
-export EDITOR=vim
+export EDITOR=nvim

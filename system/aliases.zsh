@@ -31,6 +31,7 @@ close_all_panes() {
 
 # autocorrect typos
 alias clera=clear
+alias clar=clear
 alias cler=clear
 alias cl=clear
 alias eixt=exit
