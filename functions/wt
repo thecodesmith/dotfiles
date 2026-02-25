@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+function wt() {
+  local branch="$1"
+  local options="$@"
+  worktree $options && cd "$branch"
+}
