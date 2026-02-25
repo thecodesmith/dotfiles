@@ -1,0 +1,206 @@
+#!/usr/bin/env bash
+#
+# wt - Create a git worktree and optionally set up tmux panes for development
+#
+# Usage: wt <branch-name> [options]
+#
+# Options:
+#   -b, --base <branch>   Base branch to create from (default: main or master)
+#   -t, --tmux            Set up tmux window with panes (editor + claude + shell)
+#   -e, --existing        Use existing branch instead of creating new one
+#   -n, --no-cd           Don't cd into the worktree (just print the path)
+#   -h, --help            Show this help message
+
+set -e
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+usage() {
+    sed -n '3,13p' "$0" | sed 's/^# //' | sed 's/^#//'
+    exit 0
+}
+
+error() {
+    echo -e "${RED}Error:${NC} $1" >&2
+    exit 1
+}
+
+info() {
+    echo -e "${BLUE}==>${NC} $1"
+}
+
+success() {
+    echo -e "${GREEN}==>${NC} $1"
+}
+
+# Check if we're in a git repo
+git rev-parse --git-dir > /dev/null 2>&1 || error "Not in a git repository"
+
+# Parse arguments
+BRANCH=""
+BASE_BRANCH=""
+USE_TMUX=false
+USE_EXISTING=false
+NO_CD=false
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -b|--base)
+            BASE_BRANCH="$2"
+            shift 2
+            ;;
+        -t|--tmux)
+            USE_TMUX=true
+            shift
+            ;;
+        -e|--existing)
+            USE_EXISTING=true
+            shift
+            ;;
+        -n|--no-cd)
+            NO_CD=true
+            shift
+            ;;
+        -h|--help)
+            usage
+            ;;
+        -*)
+            error "Unknown option: $1"
+            ;;
+        *)
+            if [[ -z "$BRANCH" ]]; then
+                BRANCH="$1"
+            else
+                error "Too many arguments"
+            fi
+            shift
+            ;;
+    esac
+done
+
+[[ -z "$BRANCH" ]] && error "Branch name required\n\nUsage: wt <branch-name> [options]"
+
+# Get repo root and name
+REPO_ROOT=$(git rev-parse --show-toplevel)
+REPO_NAME=$(basename "$REPO_ROOT")
+
+# Handle if we're already in a worktree - find the main repo
+MAIN_REPO_ROOT="$REPO_ROOT"
+if [[ -f "$REPO_ROOT/.git" ]]; then
+    # This is a worktree, find the main repo
+    MAIN_REPO_ROOT=$(git -C "$REPO_ROOT" rev-parse --path-format=absolute --git-common-dir | sed 's|/.git$||')
+    REPO_NAME=$(basename "$MAIN_REPO_ROOT")
+fi
+
+# Worktrees directory is sibling to main repo
+WORKTREES_DIR="$(dirname "$MAIN_REPO_ROOT")/${REPO_NAME}-worktrees"
+
+# Sanitize branch name for directory (replace / with -)
+SAFE_BRANCH=$(echo "$BRANCH" | tr '/' '-')
+WORKTREE_PATH="${WORKTREES_DIR}/${SAFE_BRANCH}"
+
+# Create worktrees directory if it doesn't exist
+mkdir -p "$WORKTREES_DIR"
+
+# Determine base branch if not specified
+if [[ -z "$BASE_BRANCH" ]]; then
+    if git show-ref --verify --quiet refs/heads/main; then
+        BASE_BRANCH="main"
+    elif git show-ref --verify --quiet refs/heads/master; then
+        BASE_BRANCH="master"
+    else
+        BASE_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+    fi
+fi
+
+# Check if worktree already exists
+if [[ -d "$WORKTREE_PATH" ]]; then
+    info "Worktree already exists at ${WORKTREE_PATH}"
+else
+    # Create the worktree
+    if [[ "$USE_EXISTING" == true ]]; then
+        # Use existing branch
+        if ! git show-ref --verify --quiet "refs/heads/${BRANCH}"; then
+            error "Branch '${BRANCH}' does not exist. Remove -e flag to create it."
+        fi
+        info "Creating worktree for existing branch '${BRANCH}'"
+        git worktree add "$WORKTREE_PATH" "$BRANCH"
+    else
+        # Create new branch from base
+        if git show-ref --verify --quiet "refs/heads/${BRANCH}"; then
+            echo -e "${YELLOW}Warning:${NC} Branch '${BRANCH}' already exists, checking it out"
+            git worktree add "$WORKTREE_PATH" "$BRANCH"
+        else
+            info "Creating worktree with new branch '${BRANCH}' from '${BASE_BRANCH}'"
+            git worktree add -b "$BRANCH" "$WORKTREE_PATH" "$BASE_BRANCH"
+        fi
+    fi
+    success "Worktree created at ${WORKTREE_PATH}"
+fi
+
+# Copy local config files that might be needed
+copy_local_configs() {
+    local src="$MAIN_REPO_ROOT"
+    local dest="$WORKTREE_PATH"
+
+    # Common local config files to copy (if they exist and aren't tracked)
+    local configs=(".env" ".env.local" ".envrc" ".tool-versions" ".nvmrc")
+
+    for config in "${configs[@]}"; do
+        if [[ -f "${src}/${config}" ]] && ! git -C "$src" ls-files --error-unmatch "$config" &>/dev/null; then
+            if [[ ! -f "${dest}/${config}" ]]; then
+                cp "${src}/${config}" "${dest}/${config}"
+                info "Copied ${config}"
+            fi
+        fi
+    done
+}
+
+copy_local_configs
+
+# Set up tmux window if requested
+if [[ "$USE_TMUX" == true ]]; then
+    if [[ -z "$TMUX" ]]; then
+        error "Not inside a tmux session. Run tmux first or use without -t flag."
+    fi
+
+    WINDOW_NAME="${SAFE_BRANCH}"
+
+    # Check if window already exists
+    if tmux list-windows -F '#{window_name}' | grep -q "^${WINDOW_NAME}$"; then
+        info "Switching to existing window: ${WINDOW_NAME}"
+        tmux select-window -t "${WINDOW_NAME}"
+    else
+        info "Creating tmux window: ${WINDOW_NAME}"
+
+        # Create new window
+        tmux new-window -n "$WINDOW_NAME" -c "$WORKTREE_PATH"
+
+        # Split horizontally - bottom pane for claude
+        tmux split-window -v -p 35 -c "$WORKTREE_PATH"
+
+        # Split bottom pane vertically - right side for shell commands
+        tmux split-window -h -p 40 -c "$WORKTREE_PATH"
+
+        # Select the main (top) pane
+        tmux select-pane -t 0
+
+        success "Window created with 3 panes: editor (top), claude (bottom-left), shell (bottom-right)"
+    fi
+elif [[ "$NO_CD" == true ]]; then
+    echo "$WORKTREE_PATH"
+else
+    # Print the path for shell integration
+    success "Worktree ready at:"
+    echo ""
+    echo "  cd ${WORKTREE_PATH}"
+    echo ""
+    echo "Or with tmux panes:"
+    echo ""
+    echo "  wt ${BRANCH} -t"
+fi
