@@ -2,8 +2,11 @@
 *~
 *.swp
 *.swo
+*.iml
+.idea
 .java-version
 venv
 .venv
 .vim
 *.zwc
+.claude/*.local.json

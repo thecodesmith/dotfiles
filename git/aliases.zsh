@@ -18,7 +18,7 @@ fi
 # Git aliases
 alias gl='git pull --prune'
 alias glog="git log --graph --pretty=format:'%Cred%h%Creset %an: %s - %Creset %C(yellow)%d%Creset %Cgreen(%cr)%Creset' --abbrev-commit --date=relative"
-alias gp='git push origin HEAD'
+alias gp='git push origin HEAD --set-upstream'
 alias gd='git diff'
 alias gds='git diff --staged'
 alias ga='git add'
@@ -33,5 +33,5 @@ alias ga.='git add .'
 alias ghb='gh browse'
 
 function gb () {
-    git checkout $(git branch -a --sort=-committerdate $@ | sed 's,remotes/origin/,,' | sort -u | fzf | tr -d '[:space:]')
+    git checkout $(git branch -a --sort=-committerdate $@ | sed 's,remotes/origin/,,' | uniq | fzf | tr -d '[:space:]')
 }
