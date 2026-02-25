@@ -2,10 +2,11 @@
 alias ev='vim ~/.vimrc'
 alias ez='vim ~/.zshrc'
 
-function v() {
-    if [ -d .venv ]; then
-        pipenv run vim $@
-    else
-        vim $@
-    fi
-}
+# disabling in favor of neovim
+# function v() {
+#     if [ -d .venv ]; then
+#         pipenv run vim $@
+#     else
+#         vim $@
+#     fi
+# }
