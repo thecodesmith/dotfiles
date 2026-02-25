@@ -6,6 +6,7 @@ alias kns-='kubens -'
 alias ka='kubectl apply -f'
 alias kg='kubectl get'
 alias kgd='kubectl get deploy'
+alias kgs='kubectl get statefulset'
 alias kgpw='kubectl-get-pods --watch'
 alias kd='kubectl describe'
 alias kdp='kubectl describe pod'
@@ -32,4 +33,8 @@ function kscale-ns() {
         kubectl scale $(kubectl get deploy -o name) --replicas="$replicas"
         kubectl scale $(kubectl get statefulset -o name) --replicas="$replicas"
     fi
+}
+
+function clusters() {
+    kubectl config get-clusters | grep -v NAME | sort
 }
