@@ -1,0 +1,1 @@
+alias npmi='npm i'
