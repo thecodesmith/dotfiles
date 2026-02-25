@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+ctx="$(kubectl config current-context 2>/dev/null)" || exit 0
+ns="$(kubectl config view --minify --output 'jsonpath={..namespace}' 2>/dev/null)"
+[ -n "$ns" ] || ns=default
+printf "%s:%s" "$ctx" "$ns"
