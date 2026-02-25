@@ -1,6 +1,6 @@
 export GO111MODULE=on
 export GOPATH=$PROJECTS/go
-export GOROOT="$(brew --prefix)/opt/go/libexec"
+export GOROOT="$(/opt/homebrew/bin/brew --prefix)/opt/go/libexec"
 export PATH="$GOPATH/bin:$PATH"
 export PATH="$GOROOT/bin:$PATH"
 
