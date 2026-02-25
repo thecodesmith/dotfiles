@@ -1,3 +1,3 @@
 export GPG_TTY=$(tty)
 
-gpgconf --launch gpg-agent
+/opt/homebrew/bin/gpgconf --launch gpg-agent
