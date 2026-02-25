@@ -1,0 +1,12 @@
+--follow
+--smart-case
+
+# Idempotent output is more important than getting the last bit of performance.
+# Deterministic output helps when iterating over searches to see what changed.
+--sort=path
+
+# I want to search hidden files, respect .gitignore but not search .git by default.
+# https://github.com/BurntSushi/ripgrep/issues/1303
+# https://github.com/BurntSushi/ripgrep/issues/1808
+--hidden
+--glob=!**/.git/*
