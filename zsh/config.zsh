@@ -9,6 +9,7 @@ export HISTFILE=~/.zsh_history
 export HISTSIZE=1000000000
 export HISTFILESIZE=$HISTSIZE
 export SAVEHIST=$HISTSIZE
+export KEYTIMEOUT=1 # reduce escape delay to 1/100th second
 
 setopt NO_BG_NICE # don't nice background tasks
 setopt NO_HUP
