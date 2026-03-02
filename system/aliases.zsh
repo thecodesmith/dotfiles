@@ -18,7 +18,6 @@ alias json='python3 -m json.tool'
 alias js=json
 alias json2yaml='yq eval -P'
 alias x='xargs '
-alias bash='PS1="in $(pwd) › " bash'
 
 close_all_panes() {
     YELLOW='\033[0;33m'
