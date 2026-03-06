@@ -122,7 +122,7 @@ bind-key -T copy-mode-vi C-j send -X page-down
 bind-key -T copy-mode-vi C-k send -X page-up
 
 # Enable mouse scrolling
-# set-option -g mouse on
+set-option -g mouse on
 # bind-key -t vi-copy WheelUpPane scroll-up
 # bind-key -t vi-copy WheelDownPane scroll-down
 
