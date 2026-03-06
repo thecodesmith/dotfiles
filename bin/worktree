@@ -109,7 +109,9 @@ mkdir -p "$WORKTREES_DIR"
 
 # Determine base branch if not specified
 if [[ -z "$BASE_BRANCH" ]]; then
-    if git show-ref --verify --quiet refs/heads/main; then
+    if git show-ref --verify --quiet refs/heads/develop; then
+        BASE_BRANCH="develop"
+    elif git show-ref --verify --quiet refs/heads/main; then
         BASE_BRANCH="main"
     elif git show-ref --verify --quiet refs/heads/master; then
         BASE_BRANCH="master"
@@ -129,6 +131,7 @@ else
             error "Branch '${BRANCH}' does not exist. Remove -e flag to create it."
         fi
         info "Creating worktree for existing branch '${BRANCH}'"
+        info "  git worktree add \"$WORKTREE_PATH\" \"$BRANCH\""
         git worktree add "$WORKTREE_PATH" "$BRANCH"
     else
         # Create new branch from base
@@ -181,16 +184,25 @@ if [[ "$USE_TMUX" == true ]]; then
         # Create new window
         tmux new-window -n "$WINDOW_NAME" -c "$WORKTREE_PATH"
 
-        # Split horizontally - bottom pane for claude
-        tmux split-window -v -p 35 -c "$WORKTREE_PATH"
-
-        # Split bottom pane vertically - right side for shell commands
-        tmux split-window -h -p 40 -c "$WORKTREE_PATH"
+        # Split pane vertically
+        tmux split-window -h -p 50 -c "$WORKTREE_PATH"
 
         # Select the main (top) pane
-        tmux select-pane -t 0
+        tmux select-pane -t 1
 
-        success "Window created with 3 panes: editor (top), claude (bottom-left), shell (bottom-right)"
+        # Split pane horizontally
+        tmux split-window -v -p 50 -c "$WORKTREE_PATH"
+
+	# Open vim in top left pane
+	tmux send-keys -t 1 v Enter
+
+	# Open claude in right pane
+	tmux send-keys -t 3 claude Enter
+
+        # Select the main (top) pane
+        tmux select-pane -t 2
+
+        success "Window created"
     fi
 elif [[ "$NO_CD" == true ]]; then
     echo "$WORKTREE_PATH"
