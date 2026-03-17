@@ -13,8 +13,13 @@
 #
 # ...to quickly jump into thecodesmith/boom, for example.
 
-if [ ! -z "$1" ] && [ -s "$PROJECTS/github/jamf/$1" ]; then
+if [ -z "$1" ]; then
+    # No argument provided, default to jamf directory
+    pushd "$PROJECTS/github/jamf"
+elif [ -s "$PROJECTS/github/jamf/$1" ]; then
+    # Argument provided and exists in jamf directory
     pushd "$PROJECTS/github/jamf/$1"
 else
+    # Argument provided, try general projects directory
     pushd "$PROJECTS/$1"
 fi
