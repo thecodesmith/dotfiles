@@ -1,0 +1,1 @@
+source <(fnox completion zsh)

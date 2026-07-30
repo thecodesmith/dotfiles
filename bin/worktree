@@ -9,6 +9,7 @@
 #   -t, --tmux            Set up tmux window with panes (editor + claude + shell)
 #   -e, --existing        Use existing branch instead of creating new one
 #   -n, --no-cd           Don't cd into the worktree (just print the path)
+#   -p, --prune           Prune worktrees for branches that have been merged remotely
 #   -h, --help            Show this help message
 
 set -e
@@ -21,7 +22,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 usage() {
-    sed -n '3,13p' "$0" | sed 's/^# //' | sed 's/^#//'
+    sed -n '3,14p' "$0" | sed 's/^# //' | sed 's/^#//'
     exit 0
 }
 
@@ -47,6 +48,7 @@ BASE_BRANCH=""
 USE_TMUX=false
 USE_EXISTING=false
 NO_CD=false
+PRUNE_WORKTREES=false
 
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -66,6 +68,10 @@ while [[ $# -gt 0 ]]; do
             NO_CD=true
             shift
             ;;
+        -p|--prune)
+            PRUNE_WORKTREES=true
+            shift
+            ;;
         -h|--help)
             usage
             ;;
@@ -83,7 +89,114 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-[[ -z "$BRANCH" ]] && error "Branch name required\n\nUsage: wt <branch-name> [options]"
+# Prune worktrees if requested
+if [[ "$PRUNE_WORKTREES" == true ]]; then
+    info "Pruning merged worktrees..."
+
+    # Get repo root and name
+    REPO_ROOT=$(git rev-parse --show-toplevel)
+    REPO_NAME=$(basename "$REPO_ROOT")
+
+    # Handle if we're already in a worktree - find the main repo
+    MAIN_REPO_ROOT="$REPO_ROOT"
+    if [[ -f "$REPO_ROOT/.git" ]]; then
+        MAIN_REPO_ROOT=$(git -C "$REPO_ROOT" rev-parse --path-format=absolute --git-common-dir | sed 's|/.git$||')
+        REPO_NAME=$(basename "$MAIN_REPO_ROOT")
+    fi
+
+    # Fetch latest from remote
+    info "Fetching latest from remote..."
+    git fetch --prune origin
+
+    # Determine default branch
+    DEFAULT_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@')
+    if [[ -z "$DEFAULT_BRANCH" ]]; then
+        if git show-ref --verify --quiet refs/heads/main; then
+            DEFAULT_BRANCH="main"
+        elif git show-ref --verify --quiet refs/heads/master; then
+            DEFAULT_BRANCH="master"
+        else
+            error "Could not determine default branch"
+        fi
+    fi
+
+    info "Default branch: ${DEFAULT_BRANCH}"
+    echo ""
+
+    # Parse worktrees from porcelain output
+    worktree_path=""
+    worktree_branch=""
+    pruned_count=0
+    warned_count=0
+
+    while IFS= read -r line; do
+        if [[ $line == worktree* ]]; then
+            worktree_path="${line#worktree }"
+        elif [[ $line == branch* ]]; then
+            worktree_branch="${line#branch refs/heads/}"
+        elif [[ -z $line ]] || [[ $line == detached ]]; then
+            # Process the worktree entry
+            if [[ -n "$worktree_path" && -n "$worktree_branch" ]]; then
+                # Skip main repo and default branch
+                if [[ "$worktree_path" != "$MAIN_REPO_ROOT" ]] && [[ "$worktree_branch" != "$DEFAULT_BRANCH" ]]; then
+                    # Check if remote branch exists
+                    if ! git show-ref --verify --quiet "refs/remotes/origin/$worktree_branch"; then
+                        info "Skipping ${worktree_branch} - no remote branch found"
+                    else
+                        # Check if merged using gh CLI first
+                        merged=false
+                        if command -v gh &> /dev/null; then
+                            pr_state=$(gh pr list --head "$worktree_branch" --state merged --json state --jq '.[0].state' 2>/dev/null || echo "")
+                            if [[ "$pr_state" == "MERGED" ]]; then
+                                merged=true
+                            fi
+                        fi
+
+                        # Fallback: check if branch is merged using git
+                        if [[ "$merged" == false ]]; then
+                            if git branch -r --merged "origin/$DEFAULT_BRANCH" | grep -q "^\s*origin/$worktree_branch$"; then
+                                merged=true
+                            fi
+                        fi
+
+                        if [[ "$merged" == true ]]; then
+                            # Check for uncommitted changes
+                            has_local_changes=false
+                            if [[ -n $(git -C "$worktree_path" status --porcelain 2>/dev/null) ]]; then
+                                has_local_changes=true
+                            fi
+
+                            # Check for unpushed commits
+                            if [[ -n $(git -C "$worktree_path" log "origin/$worktree_branch..$worktree_branch" 2>/dev/null) ]]; then
+                                has_local_changes=true
+                            fi
+
+                            if [[ "$has_local_changes" == true ]]; then
+                                echo -e "${YELLOW}Warning:${NC} $worktree_path (${worktree_branch}) is merged but has uncommitted/unpushed changes"
+                                warned_count=$((warned_count + 1))
+                            else
+                                info "Removing: $worktree_path (${worktree_branch})"
+                                git worktree remove "$worktree_path" 2>/dev/null || error "Failed to remove worktree at $worktree_path"
+                                pruned_count=$((pruned_count + 1))
+                            fi
+                        fi
+                    fi
+                fi
+            fi
+            worktree_path=""
+            worktree_branch=""
+        fi
+    done < <(git worktree list --porcelain; echo "")  # Add empty line to process last entry
+
+    echo ""
+    success "Pruned ${pruned_count} worktree(s)"
+    if [[ $warned_count -gt 0 ]]; then
+        echo -e "${YELLOW}Warned about ${warned_count} worktree(s) with local changes${NC}"
+    fi
+    exit 0
+fi
+
+[[ -z "$BRANCH" ]] && error "Branch name required\n\nUsage: wt <branch-name> [options]\nOr: wt --prune to clean up merged worktrees"
 
 # Get repo root and name
 REPO_ROOT=$(git rev-parse --show-toplevel)

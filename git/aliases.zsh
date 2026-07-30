@@ -1,15 +1,3 @@
-# Use `hub` as our git wrapper:
-#   https://hub.github.com/
-if hash hub 2>/dev/null
-then
-  hub_path=$(which hub)
-fi
-
-if (( $+commands[hub] ))
-then
-  alias git=$hub_path
-fi
-
 # batdiff() {
 #     echo "git diff --name-only --diff-filter=d $@ | xargs bat --diff"
 #     git diff --name-only --diff-filter=d $@ | xargs bat --diff
@@ -30,7 +18,8 @@ alias gcb='git copy-branch-name'
 # alias gb='git branch --sort=-committerdate'
 alias gs='git status -sb'
 alias ga.='git add .'
-alias ghb='gh browse'
+# alias ghb='gh browse'
+alias ghpv='gh pr view --web'
 
 function gb () {
     git checkout $(git branch -a --sort=-committerdate $@ | sed 's,remotes/origin/,,' | uniq | fzf | tr -d '[:space:]')
