@@ -1,0 +1,246 @@
+#!/usr/bin/env zsh
+
+USAGE="
+Select an RDS instance or Aurora cluster in the current AWS_PROFILE/AWS_REGION
+with fzf, resolve the master credentials from Secrets Manager, and open a
+database console (psql or mysql).
+
+Usage:
+  rds-console [flags] [-- client args]
+
+Flags:
+  -i, --identifier  Skip fzf and use this DB instance/cluster identifier
+  -u, --user        Override the database user
+  -d, --database    Override the database name
+  -p, --port        Override the port
+  -s, --secret      Secrets Manager secret ID/ARN holding the credentials
+  -a, --all         Include engines with no known client (default: postgres/mysql only)
+      --print       Print the connection command instead of connecting
+  -h, --help        Display this message
+
+Everything after -- is passed through to the client, e.g.
+  rds-console -- -c 'select now()'
+"
+
+set -o pipefail
+
+identifier=''
+db_user=''
+db_name=''
+db_port=''
+secret_id=''
+all_engines=false
+print_only=false
+client_args=()
+
+while test $# -gt 0; do
+    case "$1" in
+        -i|--identifier) shift; identifier="$1" ;;
+        -u|--user)       shift; db_user="$1"    ;;
+        -d|--database)   shift; db_name="$1"    ;;
+        -p|--port)       shift; db_port="$1"    ;;
+        -s|--secret)     shift; secret_id="$1"  ;;
+        -a|--all)        all_engines=true       ;;
+        --print)         print_only=true        ;;
+        -h|--help)       echo "$USAGE" && exit  ;;
+        --)              shift; client_args=("$@"); break ;;
+        *)
+            echo "Error: invalid option $1"
+            echo "$USAGE"
+            exit 1
+            ;;
+    esac
+    shift
+done
+
+for tool in aws jq fzf; do
+    if ! command -v "$tool" > /dev/null 2>&1; then
+        echo "Error: $tool is required but not installed" >&2
+        exit 1
+    fi
+done
+
+if ! caller=$(aws sts get-caller-identity --query 'Arn' --output text 2>&1); then
+    echo "Error: no valid AWS credentials. Run 'assume' (or set AWS_PROFILE) first." >&2
+    echo "  $caller" >&2
+    exit 1
+fi
+
+region=${AWS_REGION:-${AWS_DEFAULT_REGION:-$(aws configure get region)}}
+
+profile=${AWS_PROFILE:-${AWS_DEFAULT_PROFILE:-}}
+
+echo "Profile: ${profile:-<unset>}"
+echo "Account: $caller"
+echo "Region:  ${region:-<unset>}"
+echo
+
+# Fields, tab separated: identifier type engine status endpoint port user db secret
+# The type column is added here rather than in the query so no JMESPath string
+# literals are needed.
+instances=$(aws rds describe-db-instances \
+    --query 'DBInstances[].[DBInstanceIdentifier,Engine,DBInstanceStatus,Endpoint.Address,Endpoint.Port,MasterUsername,DBName,MasterUserSecret.SecretArn]' \
+    --output text | awk -F'\t' 'NF > 1 { print $1 "\t" "instance" "\t" substr($0, index($0, "\t") + 1) }')
+
+clusters=$(aws rds describe-db-clusters \
+    --query 'DBClusters[].[DBClusterIdentifier,Engine,Status,Endpoint,Port,MasterUsername,DatabaseName,MasterUserSecret.SecretArn]' \
+    --output text | awk -F'\t' 'NF > 1 { print $1 "\t" "cluster" "\t" substr($0, index($0, "\t") + 1) }')
+
+# Column 5 is the endpoint; instances with no endpoint yet cannot be reached.
+targets=$(printf '%s\n%s\n' "$clusters" "$instances" \
+    | awk -F'\t' 'NF > 1 && $5 != "None"')
+
+if [ "$all_engines" = false ]; then
+    targets=$(echo "$targets" | awk -F'\t' '$3 ~ /postgres|mysql|mariadb/')
+fi
+
+if [ -z "$targets" ]; then
+    echo "Error: no RDS instances or clusters found in ${region:-this region}" >&2
+    exit 1
+fi
+
+if [ -n "$identifier" ]; then
+    selection=$(echo "$targets" | awk -F'\t' -v id="$identifier" '$1 == id' | head -1)
+    if [ -z "$selection" ]; then
+        echo "Error: no RDS instance or cluster named '$identifier'" >&2
+        exit 1
+    fi
+else
+    selection=$(echo "$targets" \
+        | fzf --delimiter='\t' \
+              --with-nth='1,2,3,4,5' \
+              --header='Select an RDS target' \
+              --height='60%' \
+              --reverse \
+              --select-1 \
+              --no-multi)
+fi
+
+if [ -z "$selection" ]; then
+    echo "No target selected"
+    exit 1
+fi
+
+field() { echo "$selection" | awk -F'\t' -v n="$1" '{print $n}'; }
+
+target_id=$(field 1)
+target_type=$(field 2)
+engine=$(field 3)
+db_status=$(field 4)
+host=$(field 5)
+port=$(field 6)
+master_user=$(field 7)
+master_db=$(field 8)
+master_secret=$(field 9)
+
+case "$engine" in
+    *postgres*) client='psql';  default_port=5432; default_db='postgres' ;;
+    *mysql*|mariadb) client='mysql'; default_port=3306; default_db='' ;;
+    *)
+        echo "Error: no console client known for engine '$engine'" >&2
+        exit 1
+        ;;
+esac
+
+if ! command -v "$client" > /dev/null 2>&1; then
+    echo "Error: $client is required for engine '$engine' but not installed" >&2
+    exit 1
+fi
+
+[ "$port" = 'None' ] && port="$default_port"
+[ "$master_user" = 'None' ] && master_user=''
+[ "$master_db" = 'None' ] && master_db=''
+[ "$master_secret" = 'None' ] && master_secret=''
+
+[ -z "$secret_id" ] && secret_id="$master_secret"
+
+# No managed master secret: let the user pick one matching the identifier.
+if [ -z "$secret_id" ]; then
+    candidates=$(aws secretsmanager list-secrets \
+        --filters "Key=all,Values=$target_id" \
+        --query 'SecretList[].ARN' \
+        --output text | tr '\t' '\n' | grep -v '^[[:space:]]*$')
+
+    candidate_count=$(echo "$candidates" | grep -c . )
+
+    if [ "$candidate_count" -eq 1 ]; then
+        secret_id="$candidates"
+    elif [ "$candidate_count" -gt 1 ]; then
+        secret_id=$(echo "$candidates" \
+            | fzf --header="Select the credentials secret for $target_id" \
+                  --height='40%' \
+                  --reverse \
+                  --no-multi)
+    fi
+fi
+
+secret_user=''
+secret_password=''
+
+if [ -n "$secret_id" ]; then
+    secret_json=$(aws secretsmanager get-secret-value \
+        --secret-id "$secret_id" \
+        --query 'SecretString' \
+        --output text)
+
+    if [ -z "$secret_json" ]; then
+        echo "Error: secret '$secret_id' has no SecretString" >&2
+        exit 1
+    fi
+
+    secret_user=$(echo "$secret_json" | jq -r '.username // empty')
+    secret_password=$(echo "$secret_json" | jq -r '.password // empty')
+
+    # A secret may also carry its own host/port/dbname; prefer them when the
+    # API did not give us one.
+    secret_host=$(echo "$secret_json" | jq -r '.host // empty')
+    secret_port=$(echo "$secret_json" | jq -r '.port // empty')
+    secret_db=$(echo "$secret_json" | jq -r '.dbname // .dbName // empty')
+
+    [ -z "$host" ] && host="$secret_host"
+    [ -z "$port" ] && port="$secret_port"
+    [ -z "$master_db" ] && master_db="$secret_db"
+fi
+
+[ -z "$db_user" ] && db_user="${secret_user:-$master_user}"
+[ -z "$db_name" ] && db_name="${master_db:-$default_db}"
+[ -z "$db_port" ] && db_port="$port"
+
+if [ -z "$db_user" ]; then
+    echo "Error: could not determine the database user; pass --user" >&2
+    exit 1
+fi
+
+echo "Target:   $target_id ($target_type, $engine, $db_status)"
+echo "Host:     $host:$db_port"
+echo "User:     $db_user"
+echo "Database: ${db_name:-<none>}"
+if [ -n "$secret_id" ]; then
+    echo "Secret:   $secret_id"
+else
+    echo "Secret:   <none found, client will prompt>"
+fi
+echo
+
+if [ "$client" = 'psql' ]; then
+    cmd=(psql --host "$host" --port "$db_port" --username "$db_user")
+    [ -n "$db_name" ] && cmd+=(--dbname "$db_name")
+    cmd+=("${client_args[@]}")
+    password_var='PGPASSWORD'
+else
+    cmd=(mysql --host "$host" --port "$db_port" --user "$db_user")
+    [ -n "$db_name" ] && cmd+=(--database "$db_name")
+    cmd+=("${client_args[@]}")
+    password_var='MYSQL_PWD'
+fi
+
+if [ "$print_only" = true ]; then
+    echo "$password_var=<from secret> ${cmd[*]}"
+    exit 0
+fi
+
+if [ -n "$secret_password" ]; then
+    env "$password_var=$secret_password" "${cmd[@]}"
+else
+    "${cmd[@]}"
+fi
